@@ -1,7 +1,3 @@
-#
-# TODO:
-# - fix build cxx/
-#
 Summary:	NetCDF: Network Common Data Form
 Summary(pl):	NetCDF: obs³uga wspólnego sieciowego formatu danych
 Name:		netcdf
@@ -13,11 +9,12 @@ Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.Z
 # Source0-md5:	28640a40a44f982f90f5eeb15e917a1f
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-makefile.patch
+Patch2:		%{name}-achack.patch
+Patch3:		%{name}-c++.patch
 URL:		http://unidata.ucar.edu/packages/netcdf/
-BuildRequires:	libtool
-BuildRequires:	autoconf
-BuildRequires:	gcc-c++
+BuildRequires:	libtool >= 2:1.4d-3
 BuildRequires:	gcc-g77
+BuildRequires:	libstdc++-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -64,11 +61,14 @@ Statyczne wersje bibliotek netCDF.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 %build
 cd src
 
 CFLAGS="%{rpmcflags} -Df2cFortran"
+# too many hacks to rebuild
 %configure2_13
 
 %{__make}
@@ -78,15 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libdir},%{_includedir},%{_mandir}}
 
 cd src
-%{__make} install prefix=$RPM_BUILD_ROOT%{_prefix} \
+%{__make} install \
+	prefix=$RPM_BUILD_ROOT%{_prefix} \
 	MANDIR=$RPM_BUILD_ROOT%{_mandir}
-
-# remove unwanted path from libtool script
-cat $RPM_BUILD_ROOT%{_libdir}/libnetcdf_c++.la | \
-	awk '/^dependency_libs/ { gsub("-L[ \t]*[^ \t]*/\.libs ","") } //' \
-	>$RPM_BUILD_ROOT%{_libdir}/libnetcdf_c++.la.tmp
-mv -f $RPM_BUILD_ROOT%{_libdir}/libnetcdf_c++.la.tmp \
-	$RPM_BUILD_ROOT%{_libdir}/libnetcdf_c++.la
 
 # resolve man names conflict
 mv -f $RPM_BUILD_ROOT%{_mandir}/man3/netcdf.3f \
@@ -107,9 +101,9 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %doc src/COMPATIBILITY src/COPYRIGHT src/README src/RELEASE_NOTES src/cxx/cxxdoc.ps src/fortran/cfortran.doc
-%{_includedir}/*
-%{_libdir}/*.so
+%attr(755,root,root) %{_libdir}/*.so
 %{_libdir}/*.la
+%{_includedir}/*
 %{_mandir}/man3/*
 
 %files static
