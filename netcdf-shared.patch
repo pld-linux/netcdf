@@ -1,0 +1,244 @@
+diff -Nur netcdf-3.4.orig/src/Makefile netcdf-3.4/src/Makefile
+--- netcdf-3.4.orig/src/Makefile	Mon Jul  7 18:17:36 1997
++++ netcdf-3.4/src/Makefile	Wed Mar 14 11:54:04 2001
+@@ -25,8 +25,8 @@
+ 		rules.make
+ 
+ 
+-all:		libsrc/all	\
+-		fortran/all	\
++all:		fortran/all	\
++		libsrc/all	\
+ 		ncdump/all	\
+ 		ncgen/all	\
+ 		cxx/all
+diff -Nur netcdf-3.4.orig/src/cxx/Makefile netcdf-3.4/src/cxx/Makefile
+--- netcdf-3.4.orig/src/cxx/Makefile	Mon Mar  2 22:17:26 1998
++++ netcdf-3.4/src/cxx/Makefile	Wed Mar 14 11:55:06 2001
+@@ -11,18 +11,18 @@
+ 		  nctst.cc ncvalues.cc ncvalues.hh netcdf.cc netcdf.hh \
+ 		  expected cxxdoc.tex cxxdoc.ps texinfo.tex
+ 
+-LIBRARY		= libnetcdf_c++.a
+-lib_netcdf	= ../libsrc/libnetcdf.a
+-ld_netcdf	= -L../libsrc -lnetcdf
++LIBRARYL	= libnetcdf_c++.la
++lib_netcdf	= ../libsrc/libnetcdf.la
++ld_netcdf	= -L../libsrc/.libs -lnetcdf
+ 
+ HEADER1		= netcdf.hh
+ HEADER2		= ncvalues.hh
+ 
+-libs		=  $(LIBRARY) $(ld_netcdf) $(LIBS)
++libs		= -L.libs -lnetcdf_c++ $(ld_netcdf) $(LIBS)
+ 
+ purify		= purify
+ 
+-LIB_OBJS	= netcdf.o ncvalues.o
++LIB_OBJS	= netcdf.lo ncvalues.lo
+ 
+ # a test program that uses some of the draft C++ interface
+ prog		= nctst
+@@ -32,16 +32,20 @@
+ 		  *.cps *.dvi *.fns \
+ 		  *.log *~ *.gs *.aux *.cp *.fn *.ky *.pg *.toc *.tp *.vr
+ 
+-all:		$(LIBRARY) $(prog)
++all:		$(LIBRARYL) $(prog)
++
++libnetcdf_c++.la: $(LIB_OBJS)
++	libtool gcc -o libnetcdf_c++.la $(LIB_OBJS) $(LDFLAGS) -rpath $(LIBDIR) $(ld_netcdf)
+ 
+ test:	 $(prog) FORCE
+ 	./$(prog) > test.out
+ 	@cmp expected test.out && \
+ 	    echo "*** C++ test successful ***" ;
+ 
+-install:	$(LIBDIR)/$(LIBRARY) $(INCDIR)/$(HEADER1) $(INCDIR)/$(HEADER2)
++install:	$(LIBRARYL) $(INCDIR)/$(HEADER1) $(INCDIR)/$(HEADER2)
++	libtool install $(LIBRARYL) $(LIBDIR)
+ 
+-$(prog) : $(prog_objs) $(LIBRARY) $(lib_netcdf)
++$(prog) : $(prog_objs) $(LIBRARYL) $(lib_netcdf)
+ 	$(CXX) -o $@ $(CXXCPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $(prog_objs) $(libs)
+ 
+ nctst_src: nctst.cc netcdf.cc ncvalues.cc
+diff -Nur netcdf-3.4.orig/src/fortran/Makefile netcdf-3.4/src/fortran/Makefile
+--- netcdf-3.4.orig/src/fortran/Makefile	Mon Jun 23 20:36:11 1997
++++ netcdf-3.4/src/fortran/Makefile	Wed Mar 14 11:54:04 2001
+@@ -13,20 +13,20 @@
+ ld_netcdf	= $(LIBRARY)
+ HEADER		= netcdf.inc
+ LIB_OBJS	= \
+-		  fort-attio.o	\
+-		  fort-control.o	\
+-		  fort-dim.o	\
+-		  fort-genatt.o	\
+-		  fort-geninq.o	\
+-		  fort-genvar.o	\
+-		  fort-lib.o	\
+-		  fort-misc.o	\
+-		  fort-v2compat.o	\
+-		  fort-vario.o	\
+-		  fort-var1io.o	\
+-		  fort-varaio.o	\
+-		  fort-varmio.o	\
+-		  fort-varsio.o
++		  fort-attio.lo	\
++		  fort-control.lo	\
++		  fort-dim.lo	\
++		  fort-genatt.lo	\
++		  fort-geninq.lo	\
++		  fort-genvar.lo	\
++		  fort-lib.lo	\
++		  fort-misc.lo	\
++		  fort-v2compat.lo	\
++		  fort-vario.lo	\
++		  fort-var1io.lo	\
++		  fort-varaio.lo	\
++		  fort-varmio.lo	\
++		  fort-varsio.lo
+ #
+ 
+ MANUAL		= netcdf.3f
+@@ -68,7 +68,7 @@
+ #
+ 
+ 
+-all:		$(LIBRARY) $(MANUAL)
++all:		$(LIB_OBJS) $(MANUAL)
+ 
+ test:		ftest FORCE
+ 	./ftest
+diff -Nur netcdf-3.4.orig/src/libsrc/Makefile netcdf-3.4/src/libsrc/Makefile
+--- netcdf-3.4.orig/src/libsrc/Makefile	Mon Dec  8 23:04:42 1997
++++ netcdf-3.4/src/libsrc/Makefile	Wed Mar 14 11:54:04 2001
+@@ -7,7 +7,7 @@
+ 
+ INCLUDES = -I.
+ 
+-LIBRARY 	= libnetcdf.a
++LIBRARYL 	= libnetcdf.la
+ ld_netcdf	= -L. -lnetcdf
+ 
+ HEADER	= netcdf.h
+@@ -54,7 +54,23 @@
+ 	t_ncxx.c \
+ 	t_ncx.c
+ 
+-LIB_OBJS = $(LIB_CSRCS:.c=.o)
++LIB_OBJS = $(LIB_CSRCS:.c=.lo)
++
++LIB_FOBJS = \
++	  ../fortran/fort-attio.lo	\
++	  ../fortran/fort-control.lo	\
++	  ../fortran/fort-dim.lo	\
++	  ../fortran/fort-genatt.lo	\
++	  ../fortran/fort-geninq.lo	\
++	  ../fortran/fort-genvar.lo	\
++	  ../fortran/fort-lib.lo	\
++	  ../fortran/fort-misc.lo	\
++	  ../fortran/fort-v2compat.lo	\
++	  ../fortran/fort-vario.lo	\
++	  ../fortran/fort-var1io.lo	\
++	  ../fortran/fort-varaio.lo	\
++	  ../fortran/fort-varmio.lo	\
++	  ../fortran/fort-varsio.lo
+ 
+ GARBAGE		= t_ncio.o t_ncio t_ncx.o t_ncx t_ncxx.o t_ncxx \
+ 	t_nc.o t_nc test.nc *.so
+@@ -62,16 +78,19 @@
+ DIST_GARBAGE	= ncconfig.h
+ 
+ 
+-all:		$(LIBRARY) $(MANUAL)
++all:		$(LIBRARYL) $(MANUAL)
+ 
+ check:		full_test 
+ 
+ full_test:	test_ncx test nctest
+ 
+-install:	$(LIBDIR)/$(LIBRARY)	\
++install:	$(LIBRARYL)	\
+ 		$(INCDIR)/$(HEADER)	\
+ 		$(MANDIR)/man3/$(MANUAL)
++	libtool install $(LIBRARYL) $(LIBDIR)
+ 
++libnetcdf.la:	$(LIB_OBJS)
++	libtool gcc -o libnetcdf.la $(LIB_OBJS) $(LIB_FOBJS) $(LDFLAGS) -rpath $(LIBDIR)
+ 
+ libvers.o:	../VERSION libvers.c
+ 	$(COMPILE.c) -DVERSION=`cat ../VERSION` libvers.c
+@@ -90,10 +109,10 @@
+ 	cmp test.nc test_nc.sav
+ 	@echo '*** Success ***'
+ 
+-nctest:		$(LIBRARY)
++nctest:		$(LIBRARYL)
+ 	(cd ../nctest ; make test)
+ 
+-nc_test:	$(LIBRARY)
++nc_test:	$(LIBRARYL)
+ 	(cd ../nc_test ; make test)
+ 
+ 
+diff -Nur netcdf-3.4.orig/src/ncdump/Makefile netcdf-3.4/src/ncdump/Makefile
+--- netcdf-3.4.orig/src/ncdump/Makefile	Tue Sep  2 18:59:23 1997
++++ netcdf-3.4/src/ncdump/Makefile	Wed Mar 14 11:54:04 2001
+@@ -19,8 +19,8 @@
+ 		  test0.cdl ncdump.1 Makefile
+ MANUAL		= ncdump.1
+ 
+-lib_netcdf	= ../libsrc/libnetcdf.a
+-ld_netcdf	= -L../libsrc -lnetcdf
++lib_netcdf	= ../libsrc/libnetcdf.la
++ld_netcdf	= -L../libsrc/.libs -lnetcdf
+ OBJS		=  ncdump.o vardata.o dumplib.o
+ GARBAGE		= $(PROGRAM) test0.nc test1.nc test1.cdl test2.cdl
+ 
+diff -Nur netcdf-3.4.orig/src/ncgen/Makefile netcdf-3.4/src/ncgen/Makefile
+--- netcdf-3.4.orig/src/ncgen/Makefile	Mon Mar  2 22:17:29 1998
++++ netcdf-3.4/src/ncgen/Makefile	Wed Mar 14 11:54:04 2001
+@@ -14,10 +14,10 @@
+ 		  ctest.c ctest ctest0.nc ctest1.cdl \
+ 		  ftest.f ftest ftest0.nc ftest1.cdl
+ 
+-lib_netcdf	= ../libsrc/libnetcdf.a
++lib_netcdf	= ../libsrc/libnetcdf.la
+ # Don't use "-L../libsrc -lnetcdf" in the following because that doesn't
+ # work on a CRAY T90 (sigh).
+-ld_netcdf	= $(lib_netcdf)
++ld_netcdf	= -L../libsrc/.libs -lnetcdf
+ 
+ PACKING_LIST	= Makefile depend escapes.c generic.h \
+ 		  ncgenyy.c ncgentab.c ncgentab.h \
+diff -Nur netcdf-3.4.orig/src/rules.make netcdf-3.4/src/rules.make
+--- netcdf-3.4.orig/src/rules.make	Fri Dec 19 23:07:52 1997
++++ netcdf-3.4/src/rules.make	Wed Mar 14 11:54:04 2001
+@@ -4,7 +4,7 @@
+ # It should be processed by every execution of the that utility.
+ 
+ .SUFFIXES:
+-.SUFFIXES:	.a .o .i .f .c .cc .F .y .l .m4
++.SUFFIXES:	.a .o .lo .i .f .c .cc .F .y .l .m4
+ 
+ 
+ ################################################################################
+@@ -13,11 +13,17 @@
+ .c.o:
+ 	$(COMPILE.c) $<
+ 
++.c.lo:
++	libtool $(COMPILE.c) $<
++
+ .c.i:
+ 	$(CPP) $(CPPFLAGS) $< >$@
+ 
+ .cc.o:
+ 	$(COMPILE.cxx) $<
++
++.cc.lo:
++	libtool $(COMPILE.cxx) $<
+ 
+ # Not all FORTRAN compilers support C-preprocessing of *.F files; ergo, a 
+ # relatively complicated rule ensues.
