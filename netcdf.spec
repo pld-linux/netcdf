@@ -103,7 +103,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc COMPATIBILITY COPYRIGHT README RELEASE_NOTES cxx/cxxdoc.ps fortran/cfortran.doc
 %{_includedir}/*
 %{_libdir}/*.so
-%attr(755,root,root) %{_libdir}/*.la
+%{_libdir}/*.la
 %{_mandir}/man3/*
 
 %files static
