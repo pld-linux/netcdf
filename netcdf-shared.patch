@@ -174,7 +174,7 @@ diff -Nur netcdf-3.5.0.orig/src/libsrc/Makefile netcdf-3.5.0/src/libsrc/Makefile
 +	libtool install $(LIBRARYL) $(LIBDIR)
 +
 +libnetcdf.la:	$(LIB_OBJS)
-+	libtool gcc -o libnetcdf.la $(LIB_OBJS) $(LIB_FOBJS) $(LDFLAGS) -rpath $(LIBDIR)
++	libtool --tag=CC --mode=link gcc -o libnetcdf.la $(LIB_OBJS) $(LIB_FOBJS) $(LDFLAGS) -rpath $(LIBDIR)
  
  uninstall:
  	-rm -f $(LIBDIR)/$(LIBRARY)
