@@ -3,17 +3,17 @@ Summary(pl):	NetCDF: obs³uga wspólnego sieciowego formatu danych
 Name:		netcdf
 Version:	3.4
 Release:	1
+License:	BSD-like
 Group:		Libraries
 Group(de):	Libraries
 Group(es):	Bibliotecas
 Group(fr):	Librairies
 Group(pl):	Biblioteki
-License:	BSD-like
-URL:		http://unidata.ucar.edu/packages/netcdf/index.html
-Source0:	http://unidata.ucar.edu/packages/netcdf/%{name}-%{version}.tar.Z
+Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.Z
 Patch0:		%{name}-shared.patch
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+URL:		http://unidata.ucar.edu/packages/netcdf/
 BuildRequires:	gcc-c++
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 NetCDF (network Common Data Form) is an interface for array-oriented
