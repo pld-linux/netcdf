@@ -2,7 +2,7 @@ Summary:	NetCDF: Network Common Data Form
 Summary(pl):	NetCDF: obs³uga wspólnego sieciowego formatu danych
 Name:		netcdf
 Version:	3.6.0
-Release:	1
+Release:	2
 License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.Z
@@ -10,6 +10,7 @@ Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.Z
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-makefile.patch
 URL:		http://www.unidata.ucar.edu/packages/netcdf/
+BuildRequires:	automake
 BuildRequires:	gcc-g77
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:1.4d-3
@@ -65,7 +66,8 @@ cd src
 
 CFLAGS="%{rpmcflags} -Df2cFortran"
 # too many hacks to rebuild
-%configure2_13
+cp -f /usr/share/automake/config.* .
+%configure
 
 %{__make} \
 	LIBDIR=%{_libdir}
