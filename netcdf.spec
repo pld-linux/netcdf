@@ -35,7 +35,7 @@ NetCDF powsta³ w Unidata Program Center w Boulder, Colorado.
 Summary:	Header files for netCDF
 Summary(pl):	Pliki nag³ówkowe netCDF
 Group:		Development/Libraries
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{version}-%{release}
 
 %description devel
 Header files for netCDF.
@@ -47,7 +47,7 @@ Pliki nag³ówkowe do biblioteki netCDF.
 Summary:	NetCDF - static libraries
 Summary(pl):	Biblioteki statyczne netCDF
 Group:		Development/Libraries
-Requires:	%{name}-devel = %{version}
+Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 Static version of netCDF libraries.
@@ -67,14 +67,14 @@ CFLAGS="%{rpmcflags} -Df2cFortran"
 # too many hacks to rebuild
 %configure2_13
 
-%{__make} LIBDIR=%{_libdir}
+%{__make} \
+	LIBDIR=%{_libdir}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_libdir},%{_includedir},%{_mandir}}
 
-cd src
-%{__make} install \
+%{__make} -C src install \
 	prefix=$RPM_BUILD_ROOT%{_prefix} \
 	MANDIR=$RPM_BUILD_ROOT%{_mandir} \
 	LIBDIR=$RPM_BUILD_ROOT%{_libdir}
