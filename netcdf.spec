@@ -1,16 +1,14 @@
 Summary:	NetCDF: Network Common Data Form
 Summary(pl):	NetCDF: obs³uga wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	3.5.0
-Release:	3
+Version:	3.5.1
+Release:	1
 License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.Z
-# Source0-md5:	28640a40a44f982f90f5eeb15e917a1f
+# Source0-md5:	52972e8765394010d2507a9a1dc02a56
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-makefile.patch
-Patch2:		%{name}-achack.patch
-Patch3:		%{name}-c++.patch
 URL:		http://unidata.ucar.edu/packages/netcdf/
 BuildRequires:	libtool >= 2:1.4d-3
 BuildRequires:	gcc-g77
@@ -61,8 +59,6 @@ Statyczne wersje bibliotek netCDF.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
 
 %build
 cd src
