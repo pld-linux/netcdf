@@ -1,7 +1,7 @@
 Summary:	NetCDF: Network Common Data Form
 Summary(pl):	NetCDF: obs³uga wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	3.4
+Version:	3.5.0
 Release:	1
 License:	BSD-like
 Group:		Libraries
@@ -68,7 +68,7 @@ Statyczne wersje bibliotek netCDF.
 %build
 cd src
 
-CFLAGS="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS} -Df2cFortran"
+CFLAGS="%{rpmcflags} -Df2cFortran"
 %configure
 
 %{__make}
@@ -92,7 +92,7 @@ mv -f $RPM_BUILD_ROOT%{_libdir}/libnetcdf_c++.la.tmp \
 mv -f $RPM_BUILD_ROOT%{_mandir}/man3/netcdf.3f \
 	$RPM_BUILD_ROOT%{_mandir}/man3/netcdff.3
 
-gzip -9nf COMPATIBILITY README cxx/cxxdoc.ps fortran/cfortran.doc
+gzip -9nf COMPATIBILITY COPYRIGHT README RELEASE_NOTES cxx/cxxdoc.ps fortran/cfortran.doc
 
 %clean
 rm -rf $RPM_BUILD_ROOT
