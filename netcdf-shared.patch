@@ -48,7 +48,7 @@ diff -Nur netcdf-3.5.0.orig/src/cxx/Makefile netcdf-3.5.0/src/cxx/Makefile
 +all:		$(LIBRARYL) $(prog)
 +
 +libnetcdf_c++.la: $(LIB_OBJS)
-+	libtool gcc -o libnetcdf_c++.la $(LIB_OBJS) $(LDFLAGS) -rpath $(LIBDIR) $(ld_netcdf)
++	libtool --mode=link --tag=CXX $(CXX) -o libnetcdf_c++.la $(LIB_OBJS) $(LDFLAGS) -rpath $(LIBDIR) $(lib_netcdf)
  
  test:	 $(prog) FORCE
  	./$(prog) > test.out
@@ -59,7 +59,7 @@ diff -Nur netcdf-3.5.0.orig/src/cxx/Makefile netcdf-3.5.0/src/cxx/Makefile
 +install:	$(LIBRARYL) $(INCDIR)/$(HEADER1) $(INCDIR)/$(HEADER2)\
  		$(INCDIR)/$(HEADER3)
 -
-+	libtool install $(LIBRARYL) $(LIBDIR)
++	libtool --mode=install install $(LIBRARYL) $(LIBDIR)
  
  uninstall:
  	-rm -f $(LIBDIR)/$(LIBRARY)
@@ -174,7 +174,7 @@ diff -Nur netcdf-3.5.0.orig/src/libsrc/Makefile netcdf-3.5.0/src/libsrc/Makefile
 +	libtool install $(LIBRARYL) $(LIBDIR)
 +
 +libnetcdf.la:	$(LIB_OBJS)
-+	libtool --tag=CC --mode=link gcc -o libnetcdf.la $(LIB_OBJS) $(LIB_FOBJS) $(LDFLAGS) -rpath $(LIBDIR)
++	libtool --mode=link $(CC) -o libnetcdf.la $(LIB_OBJS) $(LIB_FOBJS) $(LDFLAGS) -rpath $(LIBDIR)
  
  uninstall:
  	-rm -f $(LIBDIR)/$(LIBRARY)
@@ -241,7 +241,7 @@ diff -Nur netcdf-3.5.0.orig/src/rules.make netcdf-3.5.0/src/rules.make
  	$(COMPILE.c) $<
  
 +.c.lo:
-+	libtool $(COMPILE.c) $<
++	libtool --mode=compile $(COMPILE.c) $<
 +
  .c.i:
  	$(CPP) $(CPPFLAGS) $< >$@
@@ -250,7 +250,7 @@ diff -Nur netcdf-3.5.0.orig/src/rules.make netcdf-3.5.0/src/rules.make
  	$(COMPILE.cxx) $<
 +
 +.cpp.lo:
-+	libtool $(COMPILE.cxx) $<
++	libtool --mode=compile --tag=CXX $(COMPILE.cxx) $<
  
  # Not all FORTRAN compilers support C-preprocessing of *.F files; ergo, a 
  # relatively complicated rule ensues.
