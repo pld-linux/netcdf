@@ -1,3 +1,7 @@
+#
+# TODO:
+# - fix build cxx/
+#
 Summary:	NetCDF: Network Common Data Form
 Summary(pl):	NetCDF: obs³uga wspólnego sieciowego formatu danych
 Name:		netcdf
@@ -13,6 +17,7 @@ URL:		http://unidata.ucar.edu/packages/netcdf/
 BuildRequires:	libtool
 BuildRequires:	autoconf
 BuildRequires:	gcc-c++
+BuildRequires:	gcc-g77
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -101,7 +106,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%doc COMPATIBILITY COPYRIGHT README RELEASE_NOTES cxx/cxxdoc.ps fortran/cfortran.doc
+%doc src/COMPATIBILITY src/COPYRIGHT src/README src/RELEASE_NOTES src/cxx/cxxdoc.ps src/fortran/cfortran.doc
 %{_includedir}/*
 %{_libdir}/*.so
 %{_libdir}/*.la
