@@ -1,0 +1,11 @@
+--- netcdf-3.5.0/src/cxx/Makefile.org	Sun Apr 14 20:17:58 2002
++++ netcdf-3.5.0/src/cxx/Makefile	Sun Apr 14 20:17:38 2002
+@@ -13,7 +13,7 @@
+ 
+ LIBRARYL	= libnetcdf_c++.la
+ lib_netcdf	= ../libsrc/libnetcdf.la
+-ld_netcdf	= -L../libsrc/.libs -lnetcdf
++ld_netcdf	= -L../libsrc -L../libsrc/.libs -lnetcdf
+ 
+ HEADER1		= netcdfcpp.h
+ HEADER2		= ncvalues.h
