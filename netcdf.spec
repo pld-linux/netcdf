@@ -7,8 +7,10 @@ License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.Z
 Patch0:		%{name}-shared.patch
+Patch1:         %{name}-makefile.patch
 URL:		http://unidata.ucar.edu/packages/netcdf/
 BuildRequires:	libtool
+BuildRequires:	autoconf
 BuildRequires:	gcc-c++
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -55,12 +57,13 @@ Statyczne wersje bibliotek netCDF.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 cd src
 
 CFLAGS="%{rpmcflags} -Df2cFortran"
-%configure
+%configure2_13
 
 %{__make}
 
