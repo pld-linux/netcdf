@@ -7,7 +7,7 @@ License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.Z
 Patch0:		%{name}-shared.patch
-Patch1:         %{name}-makefile.patch
+Patch1:		%{name}-makefile.patch
 URL:		http://unidata.ucar.edu/packages/netcdf/
 BuildRequires:	libtool
 BuildRequires:	autoconf
