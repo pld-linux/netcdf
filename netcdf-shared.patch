@@ -1,17 +1,20 @@
-diff -Nur netcdf-3.5.0.orig/src/Makefile netcdf-3.5.0/src/Makefile
---- netcdf-3.5.0.orig/src/Makefile	Tue Feb 27 17:04:32 2001
-+++ netcdf-3.5.0/src/Makefile	Wed Apr  4 23:12:08 2001
-@@ -27,8 +27,8 @@
- 		rules.make
+--- netcdf-3.5.1/src/Makefile.orig	2004-01-27 15:08:14.000000000 +0100
++++ netcdf-3.5.1/src/Makefile	2004-02-11 23:29:29.498007248 +0100
+@@ -27,11 +27,12 @@
  
- 
+ # I moved fortran to the bottom of the list, sometimes AIX make get's confused 
+ # if the C library and the fortran library are built in the same second. - Ed
 -all:		libsrc/all	\
--		fortran/all	\
++# but fortran objects are linked into C library, so must it be built first --q
 +all:		fortran/all	\
 +		libsrc/all	\
- 		f90/all	\
  		ncdump/all	\
  		ncgen/all	\
+ 		cxx/all \
+-		fortran/all	\
+ 		f90/all	
+ 
+ test:		fortran/all \
 diff -Nur netcdf-3.5.0.orig/src/cxx/Makefile netcdf-3.5.0/src/cxx/Makefile
 --- netcdf-3.5.0.orig/src/cxx/Makefile	Wed May 12 21:38:30 1999
 +++ netcdf-3.5.0/src/cxx/Makefile	Wed Apr  4 23:16:55 2001
