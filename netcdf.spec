@@ -86,8 +86,6 @@ mv -f $RPM_BUILD_ROOT%{_libdir}/libnetcdf_c++.la.tmp \
 mv -f $RPM_BUILD_ROOT%{_mandir}/man3/netcdf.3f \
 	$RPM_BUILD_ROOT%{_mandir}/man3/netcdff.3
 
-gzip -9nf COMPATIBILITY COPYRIGHT README RELEASE_NOTES cxx/cxxdoc.ps fortran/cfortran.doc
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -102,7 +100,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%doc src/*.gz src/cxx/*.gz src/fortran/*.gz
+%doc COMPATIBILITY COPYRIGHT README RELEASE_NOTES cxx/cxxdoc.ps fortran/cfortran.doc
 %{_includedir}/*
 %{_libdir}/*.so
 %attr(755,root,root) %{_libdir}/*.la
