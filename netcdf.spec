@@ -6,6 +6,7 @@ Release:	2
 License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.Z
+# Source0-md5:	28640a40a44f982f90f5eeb15e917a1f
 Patch0:		%{name}-shared.patch
 Patch1:		%{name}-makefile.patch
 URL:		http://unidata.ucar.edu/packages/netcdf/
