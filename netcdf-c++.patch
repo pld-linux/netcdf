@@ -1,0 +1,75 @@
+--- netcdf-3.5.0/src/cxx/ncvalues.h.orig	Wed Oct 28 18:10:16 1998
++++ netcdf-3.5.0/src/cxx/ncvalues.h	Thu Jan  8 10:15:29 2004
+@@ -14,12 +14,14 @@
+ #ifdef STRSTREAM_H_SPEC
+ #   include STRSTREAM_H_SPEC
+ #else
+-#   include <strstream.h>
++#   include <strstream>
+ #endif
+ #include <limits.h>
+ #include <string.h>
+ #include "netcdf.h"
+ 
++using std::ostrstream;
++
+ typedef unsigned char ncbyte;
+ 
+ #define NC_UNSPECIFIED ((nc_type)0)
+--- netcdf-3.5.0/src/cxx/netcdfcpp.h.orig	Mon Feb  5 21:29:12 2001
++++ netcdf-3.5.0/src/cxx/netcdfcpp.h	Thu Jan  8 10:14:24 2004
+@@ -154,7 +154,7 @@
+     virtual ~NcDim( void );
+     
+     // to construct dimensions, since constructor is private
+-    friend NcFile;
++    friend class NcFile;
+ };
+ 
+ 
+@@ -357,7 +357,7 @@
+     void init_cur( void );
+ 
+     // to make variables, since constructor is private
+-  friend NcFile;
++  friend class NcFile;
+ };
+ 
+ 
+@@ -388,7 +388,7 @@
+     NcAtt( NcFile*, NcToken); // global attribute
+     
+     // To make attributes, since constructor is private
+-  friend NcFile;
++  friend class NcFile;
+   friend NcAtt* NcVar::get_att( NcToken ) const;
+ };
+ 
+--- netcdf-3.5.0/src/cxx/ncvalues.cpp.orig	Tue Dec 22 19:21:49 1998
++++ netcdf-3.5.0/src/cxx/ncvalues.cpp	Thu Jan  8 10:22:13 2004
+@@ -9,6 +9,7 @@
+ 
+ #include <iostream.h>		// for debugging
+ #include "ncvalues.h"
++#include <ios>
+ 
+ NcValues::NcValues( void ) : the_number(0), the_type(ncNoType)
+ {}
+@@ -304,7 +305,7 @@
+ 
+ ostream& NcValues_float::print(ostream& os) const
+ {
+-    long save=os.flags();
++    std::ios_base::fmtflags save=os.flags();
+     os.precision(7);
+     for(int i = 0; i < the_number - 1; i++)
+       os << the_values[i] << ", ";
+@@ -316,7 +317,7 @@
+ 
+ ostream& NcValues_double::print(ostream& os) const
+ {
+-    long save=os.flags();
++    std::ios_base::fmtflags save=os.flags();
+     os.precision(15);
+     for(int i = 0; i < the_number - 1; i++)
+       os << the_values[i] << ", ";
