@@ -2,7 +2,7 @@ Summary:	NetCDF: Network Common Data Form
 Summary(pl):	NetCDF: obs³uga wspólnego sieciowego formatu danych
 Name:		netcdf
 Version:	3.5.0
-Release:	2
+Release:	3
 License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.Z
@@ -71,7 +71,7 @@ CFLAGS="%{rpmcflags} -Df2cFortran"
 # too many hacks to rebuild
 %configure2_13
 
-%{__make}
+%{__make} LIBDIR=%{_libdir}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -80,7 +80,8 @@ install -d $RPM_BUILD_ROOT{%{_libdir},%{_includedir},%{_mandir}}
 cd src
 %{__make} install \
 	prefix=$RPM_BUILD_ROOT%{_prefix} \
-	MANDIR=$RPM_BUILD_ROOT%{_mandir}
+	MANDIR=$RPM_BUILD_ROOT%{_mandir} \
+	LIBDIR=$RPM_BUILD_ROOT%{_libdir}
 
 # resolve man names conflict
 mv -f $RPM_BUILD_ROOT%{_mandir}/man3/netcdf.3f \
