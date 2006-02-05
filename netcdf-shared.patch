@@ -1,6 +1,6 @@
---- netcdf-3.5.1/src/Makefile.orig	2004-01-27 15:08:14.000000000 +0100
-+++ netcdf-3.5.1/src/Makefile	2004-02-11 23:29:29.498007248 +0100
-@@ -27,11 +27,12 @@
+--- netcdf-3.6.1/src/Makefile.orig	2006-01-30 19:56:02.000000000 +0100
++++ netcdf-3.6.1/src/Makefile	2006-02-05 13:16:02.551287500 +0100
+@@ -30,11 +30,12 @@
  
  # I moved fortran to the bottom of the list, sometimes AIX make get's confused 
  # if the C library and the fortran library are built in the same second. - Ed
@@ -8,19 +8,18 @@
 +# but fortran objects are linked into C library, so must it be built first --q
 +all:		fortran/all	\
 +		libsrc/all	\
- 		ncdump/all	\
  		ncgen/all	\
+ 		ncdump/all	\
  		cxx/all \
 -		fortran/all	\
  		f90/all	
  
  test:		fortran/all \
-diff -Nur netcdf-3.5.0.orig/src/cxx/Makefile netcdf-3.5.0/src/cxx/Makefile
---- netcdf-3.5.0.orig/src/cxx/Makefile	Wed May 12 21:38:30 1999
-+++ netcdf-3.5.0/src/cxx/Makefile	Wed Apr  4 23:16:55 2001
+--- netcdf-3.6.1/src/cxx/Makefile.orig	2006-01-26 21:13:44.000000000 +0100
++++ netcdf-3.6.1/src/cxx/Makefile	2006-02-03 20:20:18.730874250 +0100
 @@ -11,19 +11,19 @@
  		  nctst.cpp ncvalues.cpp ncvalues.h netcdf.cpp netcdfcpp.h \
- 		  expected cxxdoc.tex cxxdoc.ps texinfo.tex netcdf.hh
+ 		  netcdf.hh install-sh ref_nctst.cdl ref_nctst_64bit_offset.cdl
  
 -LIBRARY		= libnetcdf_c++.a
 -lib_netcdf	= ../libsrc/libnetcdf.a
@@ -33,8 +32,8 @@ diff -Nur netcdf-3.5.0.orig/src/cxx/Makefile netcdf-3.5.0/src/cxx/Makefile
  HEADER2		= ncvalues.h
  HEADER3		= netcdf.hh
  
--libs		=  $(LIBRARY) $(ld_netcdf) $(LIBS)
-+libs		= -L.libs -lnetcdf_c++ $(ld_netcdf) $(LIBS)
+-libs		=  $(LIBRARY) $(lib_netcdf) $(LIBS)
++libs		=  -L.libs -lnetcdf_c++ $(ld_netcdf) $(LIBS)
  
  purify		= purify
  
@@ -43,20 +42,22 @@ diff -Nur netcdf-3.5.0.orig/src/cxx/Makefile netcdf-3.5.0/src/cxx/Makefile
  
  # a test program that uses some of the draft C++ interface
  prog		= nctst
-@@ -33,16 +33,19 @@
+@@ -33,8 +33,11 @@
  		  *.cps *.dvi *.fns \
  		  *.log *~ *.gs *.aux *.cp *.fn *.ky *.pg *.toc *.tp *.vr
  
 -all:		$(LIBRARY) $(prog)
 +all:		$(LIBRARYL) $(prog)
-+
+ 
 +libnetcdf_c++.la: $(LIB_OBJS)
 +	libtool --mode=link --tag=CXX $(CXX) -o libnetcdf_c++.la $(LIB_OBJS) $(LDFLAGS) -rpath $(LIBDIR) $(lib_netcdf)
- 
++  
  test:	 $(prog) FORCE
- 	./$(prog) > test.out
- 	@cmp expected test.out && \
- 	    echo "*** C++ test successful ***" ;
+ 	./$(prog)
+ 	../ncdump/ncdump -n ref_nctst nctst_classic.nc > nctst_classic.cdl
+@@ -45,9 +48,9 @@
+ 
+ check: test
  
 -install:	$(LIBDIR)/$(LIBRARY) $(INCDIR)/$(HEADER1) $(INCDIR)/$(HEADER2)\
 +install:	$(LIBRARYL) $(INCDIR)/$(HEADER1) $(INCDIR)/$(HEADER2)\
@@ -66,7 +67,7 @@ diff -Nur netcdf-3.5.0.orig/src/cxx/Makefile netcdf-3.5.0/src/cxx/Makefile
  
  uninstall:
  	-rm -f $(LIBDIR)/$(LIBRARY)
-@@ -50,7 +53,7 @@
+@@ -55,7 +58,7 @@
  	-rm -f $(INCDIR)/$(HEADER2)
  	-rm -f $(INCDIR)/$(HEADER3)
  
@@ -122,21 +123,20 @@ diff -Nur netcdf-3.5.0.orig/src/fortran/Makefile netcdf-3.5.0/src/fortran/Makefi
  
  test:		ftest FORCE
  	./ftest
-diff -Nur netcdf-3.5.0.orig/src/libsrc/Makefile netcdf-3.5.0/src/libsrc/Makefile
---- netcdf-3.5.0.orig/src/libsrc/Makefile	Fri Feb 25 16:14:14 2000
-+++ netcdf-3.5.0/src/libsrc/Makefile	Wed Apr  4 23:21:35 2001
+--- netcdf-3.6.1/src/libsrc/Makefile.orig	2005-02-17 17:15:11.000000000 +0100
++++ netcdf-3.6.1/src/libsrc/Makefile	2006-02-03 20:50:28.179957750 +0100
 @@ -7,7 +7,7 @@
  
- INCLUDES = -I.
+ INCLUDES = -I.. -I.
  
 -LIBRARY 	= libnetcdf.a
 +LIBRARYL 	= libnetcdf.la
  ld_netcdf	= -L. -lnetcdf
  
  HEADER	= netcdf.h
-@@ -54,7 +54,23 @@
+@@ -53,7 +53,23 @@
  	t_ncxx.c \
- 	t_ncx.c
+ 	t_ncx.c install-sh
  
 -LIB_OBJS = $(LIB_CSRCS:.c=.o)
 +LIB_OBJS = $(LIB_CSRCS:.c=.lo)
@@ -159,7 +159,7 @@ diff -Nur netcdf-3.5.0.orig/src/libsrc/Makefile netcdf-3.5.0/src/libsrc/Makefile
  
  GARBAGE		= t_ncio.o t_ncio t_ncx.o t_ncx t_ncxx.o t_ncxx \
  	t_nc.o t_nc test.nc *.so
-@@ -62,15 +78,19 @@
+@@ -61,15 +77,19 @@
  DIST_GARBAGE	= ncconfig.h
  
  
@@ -181,7 +181,7 @@ diff -Nur netcdf-3.5.0.orig/src/libsrc/Makefile netcdf-3.5.0/src/libsrc/Makefile
  
  uninstall:
  	-rm -f $(LIBDIR)/$(LIBRARY)
-@@ -95,10 +115,10 @@
+@@ -94,10 +114,10 @@
  	cmp test.nc test_nc.sav
  	@echo '*** Success ***'
  
@@ -257,3 +257,70 @@ diff -Nur netcdf-3.5.0.orig/src/rules.make netcdf-3.5.0/src/rules.make
  
  # Not all FORTRAN compilers support C-preprocessing of *.F files; ergo, a 
  # relatively complicated rule ensues.
+--- netcdf-3.6.1/src/f90/Makefile.orig	2004-12-18 19:08:01.000000000 +0100
++++ netcdf-3.6.1/src/f90/Makefile	2006-02-05 13:27:55.751859750 +0100
+@@ -3,8 +3,8 @@
+ # Override the definition for "ncdump" in "../macros.make".
+ NCDUMP          = ../ncdump/ncdump
+ 
+-LIBRARY         = ../libsrc/libnetcdf.a
+-LIB_OBJS        = netcdf.o typeSizes.o
++LIBRARYL        = libnetcdf_f90.la
++LIB_OBJS        = netcdf.lo typeSizes.lo
+ GARBAGE         = netcdf_test *.mod *.d example.nc example.cdl \
+ 		  eightByteIntExample.nc
+ MANUAL          = netcdf.3f90
+@@ -31,7 +31,7 @@
+ 		nves.m4 nvesput48.m4 nvesget48.m4 \
+ 		typeSizes.f90 install-sh
+ 
+-all:            $(LIBRARY)
++all:            $(LIBRARYL)
+ 
+ test:           netcdf_test
+ 	./netcdf_test
+@@ -55,23 +55,30 @@
+ EightByteIntTest-2:     EightByteIntTest-2.o typeSizes.o
+ 	$(LINK.F90) $@.o typeSizes.o $(F90LIBS)
+ 
+-typeSizes.o:    typeSizes.f90
+-	$(COMPILE.F90) typeSizes.f90
++typeSizes.lo:    typeSizes.f90
++	libtool --mode=compile $(COMPILE.F90) typeSizes.f90
+ 
+ netcdf_expanded.f90:    gen.m4 f90aux.m4 nves.m4 nvea.m4 \
+ 			nvesput48.m4 nvesget48.m4 nveaput48.m4 nveaget48.m4
+ 	$(M4) gen.m4 >$@
+ 
+-netcdf.o:       \
+-	    netcdf.f90 typeSizes.o netcdf_constants.f90 netcdf_externals.f90 \
++netcdf.lo:       \
++	    netcdf.f90 typeSizes.lo netcdf_constants.f90 netcdf_externals.f90 \
+ 	    netcdf_overloads.f90 netcdf_visibility.f90 netcdf_file.f90 \
+ 	    netcdf_dims.f90 netcdf_attributes.f90 netcdf_variables.f90 \
+ 	    netcdf_text_variables.f90 netcdf_expanded.f90
+-	$(COMPILE.F90) netcdf.f90
++	libtool --mode=compile $(COMPILE.F90) netcdf.f90
+ 
+-install:        installed_netcdf_module installed_typesizes_module \
++libnetcdf_f90.la: $(LIB_OBJS)
++	libtool --mode=link $(LINK.F90) $(LIB_OBJS) -rpath $(LIBDIR) ../libsrc/libnetcdf.la
++	
++install:        install-lib installed_netcdf_module installed_typesizes_module \
+ 		$(MANDIR)/man3f90/$(MANUAL)
+ 
++install-lib:
++	install -d $(DESTDIR)$(LIBDIR)
++	libtool --mode=install install libnetcdf_f90.la $(DESTDIR)$(LIBDIR)
++
+ installed_netcdf_module:
+ 	@if test -f netcdf.mod; then \
+ 	    header=netcdf.mod; \
+@@ -133,5 +140,5 @@
+ .f90.o:
+ 	$(COMPILE.F90) $<
+ 
+-EightByteIntTest.o:     typeSizes.o
+-EightByteIntTest-2.o:   typeSizes.o
++EightByteIntTest.o:     typeSizes.lo
++EightByteIntTest-2.o:   typeSizes.lo
