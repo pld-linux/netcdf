@@ -3,7 +3,7 @@
 %bcond_without	f90	# don't build Fortran 90 interface (just builtin F77)
 #
 Summary:	NetCDF: Network Common Data Form
-Summary(pl):	NetCDF: obs≥uga wspÛlnego sieciowego formatu danych
+Summary(pl.UTF-8):   NetCDF: obs≈Çuga wsp√≥lnego sieciowego formatu danych
 Name:		netcdf
 Version:	3.6.1
 Release:	1
@@ -34,55 +34,55 @@ Program Center in Boulder, Colorado.
 
 This package contains C and Fortran 77 library.
 
-%description -l pl
-NetCDF (Network Common Data Form) jest interfejsem dostÍpu do danych
-zorganizowanych w tablice. Biblioteka netCDF definiuje niezaleøny od
+%description -l pl.UTF-8
+NetCDF (Network Common Data Form) jest interfejsem dostƒôpu do danych
+zorganizowanych w tablice. Biblioteka netCDF definiuje niezale≈ºny od
 maszyny format reprezentowania danych naukowych. Interfejs oraz
-biblioteka pozwalaj± na tworzenie, dostÍp i wspÛ≥dzielenie danych.
-NetCDF powsta≥ w Unidata Program Center w Boulder, Colorado.
+biblioteka pozwalajƒÖ na tworzenie, dostƒôp i wsp√≥≈Çdzielenie danych.
+NetCDF powsta≈Ç w Unidata Program Center w Boulder, Colorado.
 
-Ten pakiet zawiera bibliotekÍ dla C i Fortranu 77.
+Ten pakiet zawiera bibliotekƒô dla C i Fortranu 77.
 
 %package devel
 Summary:	Header files for netCDF
-Summary(pl):	Pliki nag≥Ûwkowe netCDF
+Summary(pl.UTF-8):   Pliki nag≈Ç√≥wkowe netCDF
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description devel
 Header files for netCDF - C and Fortran 77 interfaces.
 
-%description devel -l pl
-Pliki nag≥Ûwkowe do biblioteki netCDF - interfejsy dla C i Fortranu
+%description devel -l pl.UTF-8
+Pliki nag≈Ç√≥wkowe do biblioteki netCDF - interfejsy dla C i Fortranu
 77.
 
 %package static
 Summary:	NetCDF - static library
-Summary(pl):	Biblioteka statyczna netCDF
+Summary(pl.UTF-8):   Biblioteka statyczna netCDF
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
 Static version of netCDF C and Fortran 77 library.
 
-%description static -l pl
+%description static -l pl.UTF-8
 Statyczna wersja biblioteki netCDF dla C i Fortranu 77.
 
 %package c++
 Summary:	NetCDF - C++ library
-Summary(pl):	Biblioteka C++ netCDF
+Summary(pl.UTF-8):   Biblioteka C++ netCDF
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description c++
 NetCDF - C++ library.
 
-%description c++ -l pl
+%description c++ -l pl.UTF-8
 Biblioteka C++ netCDF.
 
 %package c++-devel
 Summary:	Header files for netCDF C++ interface
-Summary(pl):	Pliki nag≥Ûwkowe interfejsu C++ netCDF
+Summary(pl.UTF-8):   Pliki nag≈Ç√≥wkowe interfejsu C++ netCDF
 Group:		Development/Libraries
 Requires:	%{name}-c++ = %{version}-%{release}
 Requires:	%{name}-devel = %{version}-%{release}
@@ -91,36 +91,36 @@ Requires:	libstdc++-devel
 %description c++-devel
 Header files for netCDF C++ interface.
 
-%description c++ -l pl
-Pliki nag≥Ûwkowe interfejsu C++ netCDF.
+%description c++ -l pl.UTF-8
+Pliki nag≈Ç√≥wkowe interfejsu C++ netCDF.
 
 %package c++-static
 Summary:	NetCDF - C++ static library
-Summary(pl):	Statyczna biblioteka C++ netCDF
+Summary(pl.UTF-8):   Statyczna biblioteka C++ netCDF
 Group:		Development/Libraries
 Requires:	%{name}-c++-devel = %{version}-%{release}
 
 %description c++-static
 NetCDF - C++ static library.
 
-%description c++-static -l pl
+%description c++-static -l pl.UTF-8
 Statyczna biblioteka C++ netCDF.
 
 %package f90
 Summary:	NetCDF - Fortran 90 library
-Summary(pl):	Biblioteka Fortranu 90 netCDF
+Summary(pl.UTF-8):   Biblioteka Fortranu 90 netCDF
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description f90
 NetCDF - Fortran 90 library.
 
-%description f90 -l pl
+%description f90 -l pl.UTF-8
 Biblioteka Fortranu 90 netCDF.
 
 %package f90-devel
 Summary:	Header files for netCDF Fortran 90 interface
-Summary(pl):	Pliki nag≥Ûwkowe interfejsu Fortran 90 netCDF
+Summary(pl.UTF-8):   Pliki nag≈Ç√≥wkowe interfejsu Fortran 90 netCDF
 Group:		Development/Libraries
 Requires:	%{name}-f90 = %{version}-%{release}
 Requires:	%{name}-devel = %{version}-%{release}
@@ -129,19 +129,19 @@ Requires:	gcc-fortran >= 5:4.0
 %description f90-devel
 Header files for netCDF Fortran 90 interface.
 
-%description f90-devel -l pl
-Pliki nag≥Ûwkowe interfejsu Fortran 90 netCDF.
+%description f90-devel -l pl.UTF-8
+Pliki nag≈Ç√≥wkowe interfejsu Fortran 90 netCDF.
 
 %package f90-static
 Summary:	NetCDF - Fortran 90 static library
-Summary(pl):	Statyczna biblioteka Fortranu 90 netCDF
+Summary(pl.UTF-8):   Statyczna biblioteka Fortranu 90 netCDF
 Group:		Development/Libraries
 Requires:	%{name}-f90-devel = %{version}-%{release}
 
 %description f90-static
 NetCDF - Fortran 90 static library.
 
-%description f90-static -l pl
+%description f90-static -l pl.UTF-8
 Statyczna biblioteka Fortranu 90 netCDF.
 
 %prep
