@@ -3,7 +3,7 @@
 %bcond_without	f90	# don't build Fortran 90 interface (just builtin F77)
 #
 Summary:	NetCDF: Network Common Data Form
-Summary(pl.UTF-8):   NetCDF: obsługa wspólnego sieciowego formatu danych
+Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
 Version:	3.6.1
 Release:	1
@@ -45,7 +45,7 @@ Ten pakiet zawiera bibliotekę dla C i Fortranu 77.
 
 %package devel
 Summary:	Header files for netCDF
-Summary(pl.UTF-8):   Pliki nagłówkowe netCDF
+Summary(pl.UTF-8):	Pliki nagłówkowe netCDF
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 
@@ -58,7 +58,7 @@ Pliki nagłówkowe do biblioteki netCDF - interfejsy dla C i Fortranu
 
 %package static
 Summary:	NetCDF - static library
-Summary(pl.UTF-8):   Biblioteka statyczna netCDF
+Summary(pl.UTF-8):	Biblioteka statyczna netCDF
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
@@ -70,7 +70,7 @@ Statyczna wersja biblioteki netCDF dla C i Fortranu 77.
 
 %package c++
 Summary:	NetCDF - C++ library
-Summary(pl.UTF-8):   Biblioteka C++ netCDF
+Summary(pl.UTF-8):	Biblioteka C++ netCDF
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
@@ -82,7 +82,7 @@ Biblioteka C++ netCDF.
 
 %package c++-devel
 Summary:	Header files for netCDF C++ interface
-Summary(pl.UTF-8):   Pliki nagłówkowe interfejsu C++ netCDF
+Summary(pl.UTF-8):	Pliki nagłówkowe interfejsu C++ netCDF
 Group:		Development/Libraries
 Requires:	%{name}-c++ = %{version}-%{release}
 Requires:	%{name}-devel = %{version}-%{release}
@@ -96,7 +96,7 @@ Pliki nagłówkowe interfejsu C++ netCDF.
 
 %package c++-static
 Summary:	NetCDF - C++ static library
-Summary(pl.UTF-8):   Statyczna biblioteka C++ netCDF
+Summary(pl.UTF-8):	Statyczna biblioteka C++ netCDF
 Group:		Development/Libraries
 Requires:	%{name}-c++-devel = %{version}-%{release}
 
@@ -108,7 +108,7 @@ Statyczna biblioteka C++ netCDF.
 
 %package f90
 Summary:	NetCDF - Fortran 90 library
-Summary(pl.UTF-8):   Biblioteka Fortranu 90 netCDF
+Summary(pl.UTF-8):	Biblioteka Fortranu 90 netCDF
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
@@ -120,7 +120,7 @@ Biblioteka Fortranu 90 netCDF.
 
 %package f90-devel
 Summary:	Header files for netCDF Fortran 90 interface
-Summary(pl.UTF-8):   Pliki nagłówkowe interfejsu Fortran 90 netCDF
+Summary(pl.UTF-8):	Pliki nagłówkowe interfejsu Fortran 90 netCDF
 Group:		Development/Libraries
 Requires:	%{name}-f90 = %{version}-%{release}
 Requires:	%{name}-devel = %{version}-%{release}
@@ -134,7 +134,7 @@ Pliki nagłówkowe interfejsu Fortran 90 netCDF.
 
 %package f90-static
 Summary:	NetCDF - Fortran 90 static library
-Summary(pl.UTF-8):   Statyczna biblioteka Fortranu 90 netCDF
+Summary(pl.UTF-8):	Statyczna biblioteka Fortranu 90 netCDF
 Group:		Development/Libraries
 Requires:	%{name}-f90-devel = %{version}-%{release}
 
