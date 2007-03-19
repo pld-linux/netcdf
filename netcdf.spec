@@ -1,17 +1,17 @@
 #
 # Conditional build:
 %bcond_without	f90	# don't build Fortran 90 interface (just builtin F77)
+%bcond_without	tests	# don't perform "make check"
 #
 Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	3.6.1
+Version:	3.6.2
 Release:	1
 License:	BSD-like
 Group:		Libraries
-Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.gz
-# Source0-md5:	2fde233aefb5c226bdecd9c3265d664e
-Patch0:		%{name}-shared.patch
+Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.bz2
+# Source0-md5:	1eca0ea1e81e14ebc5bb93e5dd25c364
 URL:		http://www.unidata.ucar.edu/packages/netcdf/
 BuildRequires:	automake
 %if %{with f90}
@@ -32,7 +32,7 @@ library, and format support the creation, access, and sharing of
 scientific data. The netCDF software was developed at the Unidata
 Program Center in Boulder, Colorado.
 
-This package contains C and Fortran 77 library.
+This package contains C library.
 
 %description -l pl.UTF-8
 NetCDF (Network Common Data Form) jest interfejsem dostępu do danych
@@ -41,7 +41,7 @@ maszyny format reprezentowania danych naukowych. Interfejs oraz
 biblioteka pozwalają na tworzenie, dostęp i współdzielenie danych.
 NetCDF powstał w Unidata Program Center w Boulder, Colorado.
 
-Ten pakiet zawiera bibliotekę dla C i Fortranu 77.
+Ten pakiet zawiera bibliotekę dla C.
 
 %package devel
 Summary:	Header files for netCDF
@@ -50,11 +50,10 @@ Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description devel
-Header files for netCDF - C and Fortran 77 interfaces.
+Header files for netCDF - C interface.
 
 %description devel -l pl.UTF-8
-Pliki nagłówkowe do biblioteki netCDF - interfejsy dla C i Fortranu
-77.
+Pliki nagłówkowe do biblioteki netCDF - interfejs dla C.
 
 %package static
 Summary:	NetCDF - static library
@@ -63,10 +62,10 @@ Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 
 %description static
-Static version of netCDF C and Fortran 77 library.
+Static version of netCDF C library.
 
 %description static -l pl.UTF-8
-Statyczna wersja biblioteki netCDF dla C i Fortranu 77.
+Statyczna wersja biblioteki netCDF dla C.
 
 %package c++
 Summary:	NetCDF - C++ library
@@ -106,74 +105,78 @@ NetCDF - C++ static library.
 %description c++-static -l pl.UTF-8
 Statyczna biblioteka C++ netCDF.
 
-%package f90
-Summary:	NetCDF - Fortran 90 library
-Summary(pl.UTF-8):	Biblioteka Fortranu 90 netCDF
+%package fortran
+Summary:	NetCDF - Fortran library
+Summary(pl.UTF-8):	Biblioteka Fortranu netCDF
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	netcdf-f90
 
-%description f90
-NetCDF - Fortran 90 library.
+%description fortran
+NetCDF - Fortran 77%{?with f90: and 90} library.
 
-%description f90 -l pl.UTF-8
-Biblioteka Fortranu 90 netCDF.
+%description fortran -l pl.UTF-8
+Biblioteka Fortranu 77%{?with_f90: i 90} netCDF.
 
-%package f90-devel
-Summary:	Header files for netCDF Fortran 90 interface
-Summary(pl.UTF-8):	Pliki nagłówkowe interfejsu Fortran 90 netCDF
+%package fortran-devel
+Summary:	Header files for netCDF Fortran interface
+Summary(pl.UTF-8):	Pliki nagłówkowe interfejsu Fortranu netCDF
 Group:		Development/Libraries
-Requires:	%{name}-f90 = %{version}-%{release}
+Requires:	%{name}-fortran = %{version}-%{release}
 Requires:	%{name}-devel = %{version}-%{release}
+%if %{with f90}
 Requires:	gcc-fortran >= 5:4.0
+%else
+Requires:	gcc-g77
+%endif
+Obsoletes:	netcdf-f90-devel
 
-%description f90-devel
-Header files for netCDF Fortran 90 interface.
+%description fortran-devel
+Header files for netCDF Fortran interface.
 
-%description f90-devel -l pl.UTF-8
-Pliki nagłówkowe interfejsu Fortran 90 netCDF.
+%description fortran-devel -l pl.UTF-8
+Pliki nagłówkowe interfejsu Fortranu netCDF.
 
-%package f90-static
-Summary:	NetCDF - Fortran 90 static library
-Summary(pl.UTF-8):	Statyczna biblioteka Fortranu 90 netCDF
+%package fortran-static
+Summary:	NetCDF - Fortran static library
+Summary(pl.UTF-8):	Statyczna biblioteka Fortranu netCDF
 Group:		Development/Libraries
-Requires:	%{name}-f90-devel = %{version}-%{release}
+Requires:	%{name}-fortran-devel = %{version}-%{release}
+Obsoletes:	netcdf-f90-static
 
-%description f90-static
-NetCDF - Fortran 90 static library.
+%description fortran-static
+NetCDF - Fortran static library.
 
-%description f90-static -l pl.UTF-8
-Statyczna biblioteka Fortranu 90 netCDF.
+%description fortran-static -l pl.UTF-8
+Statyczna biblioteka Fortranu netCDF.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
-cd src
-
 # too many hacks to rebuild
 cp -f /usr/share/automake/config.* .
-%configure
+CPPFLAGS="-DgFortran=1"
+%configure \
+	FCFLAGS="%{rpmcflags}" \
+	--enable-shared
+
+# make it first so separate fortran library can depend on it
+%{__make} -C libsrc
 
 %{__make} \
-	LIBDIR=%{_libdir}
+	libnetcdff_la_LIBADD="../f90/libnetcdff90.la ../libsrc/libnetcdf.la" \
+	libnetcdf_c___la_LIBADD="../libsrc/libnetcdf.la"
+
+%if %{with tests}
+%{__make} check
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_libdir},%{_includedir},%{_mandir}}
 
-%{__make} -C src install \
-	prefix=$RPM_BUILD_ROOT%{_prefix} \
-	MANDIR=$RPM_BUILD_ROOT%{_mandir} \
-	LIBDIR=$RPM_BUILD_ROOT%{_libdir}
-
-# resolve man names conflicts
-mv -f $RPM_BUILD_ROOT%{_mandir}/man3/netcdf.3f \
-	$RPM_BUILD_ROOT%{_mandir}/man3/netcdff.3
-%if %{with f90}
-mv -f $RPM_BUILD_ROOT%{_mandir}/man3/netcdf.3f90 \
-	$RPM_BUILD_ROOT%{_mandir}/man3/netcdf_f90.3
-%endif
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -184,25 +187,23 @@ rm -rf $RPM_BUILD_ROOT
 %post	c++ -p /sbin/ldconfig
 %postun	c++ -p /sbin/ldconfig
 
-%post	f90 -p /sbin/ldconfig
-%postun	f90 -p /sbin/ldconfig
+%post	fortran -p /sbin/ldconfig
+%postun	fortran -p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
-%doc src/{COPYRIGHT,README,RELEASE_NOTES}
+%doc COPYRIGHT README RELEASE_NOTES man/netcdf.html
 %attr(755,root,root) %{_bindir}/*
 %attr(755,root,root) %{_libdir}/libnetcdf.so.*.*.*
 %{_mandir}/man1/*
 
 %files devel
 %defattr(644,root,root,755)
-%doc src/fortran/cfortran.doc
+%doc man/netcdf-c.html
 %attr(755,root,root) %{_libdir}/libnetcdf.so
 %{_libdir}/libnetcdf.la
 %{_includedir}/netcdf.h
-%{_includedir}/netcdf.inc
 %{_mandir}/man3/netcdf.3*
-%{_mandir}/man3/netcdff.3*
 
 %files static
 %defattr(644,root,root,755)
@@ -214,6 +215,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files c++-devel
 %defattr(644,root,root,755)
+%doc man/netcdf-cxx.html
 %attr(755,root,root) %{_libdir}/libnetcdf_c++.so
 %{_libdir}/libnetcdf_c++.la
 %{_includedir}/ncvalues.h
@@ -224,20 +226,23 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libnetcdf_c++.a
 
-%if %{with f90}
-%files f90
+%files fortran
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libnetcdf_f90.so.*.*.*
+%attr(755,root,root) %{_libdir}/libnetcdff.so.*.*.*
 
-%files f90-devel
+%files fortran-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libnetcdf_f90.so
-%{_libdir}/libnetcdf_f90.la
+%doc man/netcdf-f77.html man/netcdf-f90.html
+%attr(755,root,root) %{_libdir}/libnetcdff.so
+%{_libdir}/libnetcdff.la
+%{_includedir}/netcdf.inc
+%{_mandir}/man3/netcdf_f77.3*
+%if %{with f90}
 %{_includedir}/netcdf.mod
 %{_includedir}/typesizes.mod
 %{_mandir}/man3/netcdf_f90.3*
-
-%files f90-static
-%defattr(644,root,root,755)
-%{_libdir}/libnetcdf_f90.a
 %endif
+
+%files fortran-static
+%defattr(644,root,root,755)
+%{_libdir}/libnetcdff.a
