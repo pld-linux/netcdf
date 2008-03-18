@@ -7,7 +7,7 @@ Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
 Version:	3.6.2
-Release:	2
+Release:	3
 License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.bz2
@@ -174,6 +174,9 @@ CPPFLAGS="-DgFortran=1"
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
+%{__make} -C libsrc install \
+	DESTDIR=$RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
