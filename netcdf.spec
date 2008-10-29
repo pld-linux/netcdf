@@ -6,12 +6,12 @@
 Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	3.6.2
-Release:	3
+Version:	3.6.3
+Release:	1
 License:	BSD-like
 Group:		Libraries
-Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.bz2
-# Source0-md5:	1eca0ea1e81e14ebc5bb93e5dd25c364
+Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.gz
+# Source0-md5:	334e9bdc010b6cd03fd6531a45fe50ad
 URL:		http://www.unidata.ucar.edu/packages/netcdf/
 BuildRequires:	automake
 %if %{with f90}
@@ -19,8 +19,11 @@ BuildRequires:	gcc-fortran >= 5:4.0
 %else
 BuildRequires:	gcc-g77
 %endif
+BuildRequires:	info
+BuildRequires:	libtool >= 2:1.5
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:1.5
+BuildRequires:	texinfo
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
