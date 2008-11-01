@@ -20,7 +20,6 @@ BuildRequires:	gcc-fortran >= 5:4.0
 %else
 BuildRequires:	gcc-g77
 %endif
-BuildRequires:	libtool >= 2:1.5
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:1.5
 BuildRequires:	texinfo
