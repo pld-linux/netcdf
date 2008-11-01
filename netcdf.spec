@@ -12,6 +12,7 @@ License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.gz
 # Source0-md5:	334e9bdc010b6cd03fd6531a45fe50ad
+Patch0:		%{name}-info.patch
 URL:		http://www.unidata.ucar.edu/packages/netcdf/
 BuildRequires:	automake
 %if %{with f90}
@@ -19,7 +20,6 @@ BuildRequires:	gcc-fortran >= 5:4.0
 %else
 BuildRequires:	gcc-g77
 %endif
-BuildRequires:	info
 BuildRequires:	libtool >= 2:1.5
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:1.5
@@ -155,6 +155,7 @@ Statyczna biblioteka Fortranu netCDF.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 # too many hacks to rebuild
@@ -190,18 +191,39 @@ rm -rf $RPM_BUILD_ROOT
 %post	-p /sbin/ldconfig
 %postun	-p /sbin/ldconfig
 
+%post	devel -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
+%postun	devel -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
 %post	c++ -p /sbin/ldconfig
 %postun	c++ -p /sbin/ldconfig
+
+%post	c++-devel -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
+%postun	c++-devel -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
 
 %post	fortran -p /sbin/ldconfig
 %postun	fortran -p /sbin/ldconfig
 
+%post	fortran-devel -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
+%postun	fortran-devel -p /sbin/postshell
+-/usr/sbin/fix-info-dir -c %{_infodir}
+
 %files
 %defattr(644,root,root,755)
 %doc COPYRIGHT README RELEASE_NOTES man/netcdf.html
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_bindir}/ncdump
+%attr(755,root,root) %{_bindir}/ncgen
 %attr(755,root,root) %{_libdir}/libnetcdf.so.*.*.*
-%{_mandir}/man1/*
+%attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.4
+%{_mandir}/man1/ncdump.1*
+%{_mandir}/man1/ncgen.1*
 
 %files devel
 %defattr(644,root,root,755)
@@ -210,6 +232,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libnetcdf.la
 %{_includedir}/netcdf.h
 %{_mandir}/man3/netcdf.3*
+%{_infodir}/netcdf.info*
+%{_infodir}/netcdf-c.info*
+%{_infodir}/netcdf-install.info*
+%{_infodir}/netcdf-tutorial.info*
 
 %files static
 %defattr(644,root,root,755)
@@ -218,6 +244,7 @@ rm -rf $RPM_BUILD_ROOT
 %files c++
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libnetcdf_c++.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libnetcdf_c++.so.4
 
 %files c++-devel
 %defattr(644,root,root,755)
@@ -227,6 +254,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/ncvalues.h
 %{_includedir}/netcdf.hh
 %{_includedir}/netcdfcpp.h
+%{_infodir}/netcdf-cxx.info*
 
 %files c++-static
 %defattr(644,root,root,755)
@@ -235,6 +263,7 @@ rm -rf $RPM_BUILD_ROOT
 %files fortran
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libnetcdff.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libnetcdff.so.4
 
 %files fortran-devel
 %defattr(644,root,root,755)
@@ -243,10 +272,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libnetcdff.la
 %{_includedir}/netcdf.inc
 %{_mandir}/man3/netcdf_f77.3*
+%{_infodir}/netcdf-f77.info*
 %if %{with f90}
 %{_includedir}/netcdf.mod
 %{_includedir}/typesizes.mod
 %{_mandir}/man3/netcdf_f90.3*
+%{_infodir}/netcdf-f90.info*
 %endif
 
 %files fortran-static
