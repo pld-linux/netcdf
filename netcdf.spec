@@ -6,12 +6,12 @@
 Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	3.6.3
+Version:	4.0
 Release:	1
 License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.gz
-# Source0-md5:	334e9bdc010b6cd03fd6531a45fe50ad
+# Source0-md5:	afc057b07b6e6843556dcfbc4ced402c
 Patch0:		%{name}-info.patch
 URL:		http://www.unidata.ucar.edu/packages/netcdf/
 BuildRequires:	automake
