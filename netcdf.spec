@@ -6,12 +6,12 @@
 Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	4.0
+Version:	4.0.1
 Release:	1
 License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.gz
-# Source0-md5:	afc057b07b6e6843556dcfbc4ced402c
+# Source0-md5:	a251453c5477599f050fa4e593295186
 Patch0:		%{name}-info.patch
 URL:		http://www.unidata.ucar.edu/packages/netcdf/
 BuildRequires:	automake
@@ -164,12 +164,11 @@ CPPFLAGS="-DgFortran=1"
 	FCFLAGS="%{rpmcflags}" \
 	--enable-shared
 
-# make it first so separate fortran library can depend on it
-%{__make} -C libsrc
+# TODO (linking broken; BR: curl-devel, hdf5-devel, maybe szip-devel, libxml2-devel):
+#	--enable-dap \
+#	--enable-netcdf-4 \
 
-%{__make} \
-	libnetcdff_la_LIBADD="../f90/libnetcdff90.la ../libsrc/libnetcdf.la" \
-	libnetcdf_c___la_LIBADD="../libsrc/libnetcdf.la"
+%{__make}
 
 %if %{with tests}
 %{__make} check
@@ -216,7 +215,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc COPYRIGHT README RELEASE_NOTES man/netcdf.html
+%doc COPYRIGHT README RELEASE_NOTES man4/netcdf.html
 %attr(755,root,root) %{_bindir}/ncdump
 %attr(755,root,root) %{_bindir}/ncgen
 %attr(755,root,root) %{_libdir}/libnetcdf.so.*.*.*
@@ -226,10 +225,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%doc man/netcdf-c.html
+%doc man4/netcdf-c.html
+%attr(755,root,root) %{_bindir}/nc-config
 %attr(755,root,root) %{_libdir}/libnetcdf.so
 %{_libdir}/libnetcdf.la
 %{_includedir}/netcdf.h
+%{_pkgconfigdir}/netcdf.pc
 %{_mandir}/man3/netcdf.3*
 %{_infodir}/netcdf.info*
 %{_infodir}/netcdf-c.info*
@@ -247,13 +248,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files c++-devel
 %defattr(644,root,root,755)
-%doc man/netcdf-cxx.html
+%doc man4/netcdf-cxx.html
 %attr(755,root,root) %{_libdir}/libnetcdf_c++.so
 %{_libdir}/libnetcdf_c++.la
 %{_includedir}/ncvalues.h
 %{_includedir}/netcdf.hh
 %{_includedir}/netcdfcpp.h
 %{_infodir}/netcdf-cxx.info*
+%{_infodir}/netcdf-cxx4.info*
 
 %files c++-static
 %defattr(644,root,root,755)
@@ -266,7 +268,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files fortran-devel
 %defattr(644,root,root,755)
-%doc man/netcdf-f77.html man/netcdf-f90.html
+%doc man4/netcdf-f77.html man4/netcdf-f90.html
 %attr(755,root,root) %{_libdir}/libnetcdff.so
 %{_libdir}/libnetcdff.la
 %{_includedir}/netcdf.inc
