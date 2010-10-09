@@ -26,20 +26,6 @@
  @end direntry
  @end ifinfo
  
---- netcdf-4.0.1/man4/netcdf-cxx4.texi.orig	2008-08-06 19:01:14.000000000 +0200
-+++ netcdf-4.0.1/man4/netcdf-cxx4.texi	2009-04-23 21:04:49.045722188 +0200
-@@ -17,9 +17,9 @@
- @include defines.texi
- 
- @ifinfo
--@dircategory netCDF scientific data format
-+@dircategory Libraries:
- @direntry
--* netcdf-cxx4: (netcdf-cxx4).         @value{cxx4-man}
-+* netcdf-cxx4: (netcdf-cxx4).		@value{cxx4-man}
- @end direntry
- @end ifinfo
- 
 --- netcdf-4.0.1/man4/netcdf-f77.texi.orig	2008-01-29 19:22:51.000000000 +0100
 +++ netcdf-4.0.1/man4/netcdf-f77.texi	2008-11-01 12:42:21.152734968 +0100
 @@ -16,9 +16,9 @@

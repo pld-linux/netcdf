@@ -6,20 +6,22 @@
 Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	4.0.1
+Version:	4.1.1
 Release:	1
 License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.gz
-# Source0-md5:	a251453c5477599f050fa4e593295186
+# Source0-md5:	79c5ff14c80d5e18dd8f1fceeae1c8e1
 Patch0:		%{name}-info.patch
 URL:		http://www.unidata.ucar.edu/packages/netcdf/
 BuildRequires:	automake
+BuildRequires:	curl-devel
 %if %{with f90}
 BuildRequires:	gcc-fortran >= 5:4.0
 %else
 BuildRequires:	gcc-g77
 %endif
+BuildRequires:	hdf5-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:1.5
 BuildRequires:	texinfo
@@ -162,11 +164,9 @@ cp -f /usr/share/automake/config.* .
 CPPFLAGS="-DgFortran=1"
 %configure \
 	FCFLAGS="%{rpmcflags}" \
+	--enable-dap \
+	--enable-netcdf-4 \
 	--enable-shared
-
-# TODO (linking broken; BR: curl-devel, hdf5-devel, maybe szip-devel, libxml2-devel):
-#	--enable-dap \
-#	--enable-netcdf-4 \
 
 %{__make}
 
@@ -177,11 +177,10 @@ CPPFLAGS="-DgFortran=1"
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} -C libsrc install \
-	DESTDIR=$RPM_BUILD_ROOT
-
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
+
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/netcdf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -216,12 +215,16 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc COPYRIGHT README RELEASE_NOTES man4/netcdf.html
+%attr(755,root,root) %{_bindir}/nccopy
 %attr(755,root,root) %{_bindir}/ncdump
 %attr(755,root,root) %{_bindir}/ncgen
+%attr(755,root,root) %{_bindir}/ncgen3
 %attr(755,root,root) %{_libdir}/libnetcdf.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.4
+%attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.6
+%{_mandir}/man1/nccopy.1*
 %{_mandir}/man1/ncdump.1*
 %{_mandir}/man1/ncgen.1*
+%{_mandir}/man1/ncgen3.1*
 
 %files devel
 %defattr(644,root,root,755)
@@ -244,7 +247,7 @@ rm -rf $RPM_BUILD_ROOT
 %files c++
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libnetcdf_c++.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libnetcdf_c++.so.4
+%attr(755,root,root) %ghost %{_libdir}/libnetcdf_c++.so.5
 
 %files c++-devel
 %defattr(644,root,root,755)
@@ -255,7 +258,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/netcdf.hh
 %{_includedir}/netcdfcpp.h
 %{_infodir}/netcdf-cxx.info*
-%{_infodir}/netcdf-cxx4.info*
 
 %files c++-static
 %defattr(644,root,root,755)
@@ -264,7 +266,7 @@ rm -rf $RPM_BUILD_ROOT
 %files fortran
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libnetcdff.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libnetcdff.so.4
+%attr(755,root,root) %ghost %{_libdir}/libnetcdff.so.5
 
 %files fortran-devel
 %defattr(644,root,root,755)
