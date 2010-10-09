@@ -21,10 +21,11 @@ BuildRequires:	gcc-fortran >= 5:4.0
 %else
 BuildRequires:	gcc-g77
 %endif
-BuildRequires:	hdf5-devel
+BuildRequires:	hdf5-devel >= 1.8.5
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:1.5
 BuildRequires:	texinfo
+Requires:	hdf5 >= 1.8.5
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -52,6 +53,8 @@ Summary:	Header files for netCDF
 Summary(pl.UTF-8):	Pliki nagłówkowe netCDF
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	curl-devel
+Requires:	hdf5-devel >= 1.8.5
 
 %description devel
 Header files for netCDF - C interface.
