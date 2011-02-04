@@ -97,7 +97,7 @@ Requires:	libstdc++-devel
 %description c++-devel
 Header files for netCDF C++ interface.
 
-%description c++ -l pl.UTF-8
+%description c++-devel -l pl.UTF-8
 Pliki nagłówkowe interfejsu C++ netCDF.
 
 %package c++-static
