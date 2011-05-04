@@ -6,14 +6,16 @@
 Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	4.1.1
+Version:	4.1.2
 Release:	1
 License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.gz
-# Source0-md5:	79c5ff14c80d5e18dd8f1fceeae1c8e1
+# Source0-md5:	4a94ebe2d998d649159aa5665c83fb1a
 Patch0:		%{name}-info.patch
+Patch1:		%{name}-link.patch
 URL:		http://www.unidata.ucar.edu/packages/netcdf/
+BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
 BuildRequires:	curl-devel
 %if %{with f90}
@@ -23,7 +25,7 @@ BuildRequires:	gcc-g77
 %endif
 BuildRequires:	hdf5-devel >= 1.8.5
 BuildRequires:	libstdc++-devel
-BuildRequires:	libtool >= 2:1.5
+BuildRequires:	libtool >= 2:2.4
 BuildRequires:	texinfo
 Requires:	hdf5 >= 1.8.5
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -160,11 +162,28 @@ Statyczna biblioteka Fortranu netCDF.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
-# too many hacks to rebuild
-cp -f /usr/share/automake/config.* .
-CPPFLAGS="-DgFortran=1"
+cd udunits
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
+%{__autoheader}
+%{__automake}
+cd ../libcf
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
+%{__autoheader}
+%{__automake}
+cd ..
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
+%{__autoheader}
+%{__automake}
+CPPFLAGS="%{rpmcppflags} -DgFortran=1"
 %configure \
 	FCFLAGS="%{rpmcflags}" \
 	--enable-dap \
@@ -182,8 +201,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
-
-%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/netcdf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -223,7 +240,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/ncgen
 %attr(755,root,root) %{_bindir}/ncgen3
 %attr(755,root,root) %{_libdir}/libnetcdf.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.6
+%attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.7
 %{_mandir}/man1/nccopy.1*
 %{_mandir}/man1/ncdump.1*
 %{_mandir}/man1/ncgen.1*
@@ -250,7 +267,7 @@ rm -rf $RPM_BUILD_ROOT
 %files c++
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libnetcdf_c++.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libnetcdf_c++.so.5
+%attr(755,root,root) %ghost %{_libdir}/libnetcdf_c++.so.4
 
 %files c++-devel
 %defattr(644,root,root,755)

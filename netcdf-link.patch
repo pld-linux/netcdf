@@ -1,0 +1,30 @@
+--- netcdf-4.1.2/fortran/Makefile.am.orig	2011-03-30 01:13:37.000000000 +0200
++++ netcdf-4.1.2/fortran/Makefile.am	2011-05-04 18:11:56.110181060 +0200
+@@ -76,6 +76,7 @@
+ if BUILD_SEPARATE_FORTRAN
+ lib_LTLIBRARIES = libnetcdff.la
+ libnetcdff_la_LDFLAGS = $(AM_LDFLAGS) -version-number 5:1:0 
++libnetcdff_la_LIBADD += $(top_builddir)/liblib/libnetcdf.la
+ else
+ noinst_LTLIBRARIES = libnetcdff.la
+ endif
+--- netcdf-4.1.2/Makefile.am.orig	2011-03-30 01:13:38.000000000 +0200
++++ netcdf-4.1.2/Makefile.am	2011-05-04 18:16:10.500189577 +0200
+@@ -115,8 +115,8 @@
+ # If using dispatch, then the order is different
+ if BUILD_SEPARATE_FORTRAN
+ SUBDIRS = include $(UDUNITS) $(H5_TEST_DIR) $(DISPATCHDIR) $(OCLIB)	\
+-$(F90_DIR) $(F77_DIR) $(LIBSRC_DIR) $(LIBSRC4_DIR) $(NCDAP3) $(NCDAP4)	\
+-$(LIBCDMR) ${ASSEMBLEDIR} $(V2_TEST) $(NCGEN3) $(NCGEN) $(NCDUMP)	\
++$(LIBSRC_DIR) $(LIBSRC4_DIR) $(NCDAP3) $(NCDAP4)	\
++$(LIBCDMR) ${ASSEMBLEDIR} $(F90_DIR) $(F77_DIR) $(V2_TEST) $(NCGEN3) $(NCGEN) $(NCDUMP)	\
+ $(F77_TEST) ${CXX_DIR} $(CXX4) $(NC_TEST4) $(NC_TEST_DIR)		\
+ $(NCDAPTESTDIR) man4 $(EXAMPLES) $(LIBCF)
+ else
+--- netcdf-4.1.2/cxx/Makefile.am.orig	2011-05-04 18:27:25.440212176 +0200
++++ netcdf-4.1.2/cxx/Makefile.am	2011-05-04 18:27:06.136878198 +0200
+@@ -73,3 +73,4 @@
+ # Library source.
+ libnetcdf_c___la_SOURCES = netcdf.cpp ncvalues.cpp
+ libnetcdf_c___la_LDFLAGS = -version-number 4:1:0
++libnetcdf_c___la_LIBADD = $(top_builddir)/liblib/libnetcdf.la
