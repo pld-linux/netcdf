@@ -1,8 +1,9 @@
 #
 # Conditional build:
-%bcond_without	f90	# don't build Fortran 90 interface (just builtin F77)
-%bcond_without	tests	# don't perform "make check"
-			# (note: tests need endoder-enabled szip)
+%bcond_without	f90		# don't build Fortran 90 interface (just builtin F77)
+%bcond_without	tests		# don't perform "make check"
+				# (note: tests need endoder-enabled szip)
+%bcond_with	tests_net	# remote tests (Internet access required)
 #
 Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
@@ -191,6 +192,7 @@ cd ..
 CPPFLAGS="%{rpmcppflags} -DgFortran=1"
 %configure \
 	FCFLAGS="%{rpmcflags}" \
+	%{!?with_tests_net:--disable-dap-remote-tests} \
 	--enable-cxx-4 \
 	--enable-dap \
 	--enable-netcdf-4 \
