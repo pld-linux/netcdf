@@ -12,7 +12,7 @@ Release:	1
 License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.gz
-# Source0-md5:	93e675a50d9bfd2709429f88f0f4e71f
+# Source0-md5:	b920a6c3a30e9cd46fe96d9fb65ef17e
 URL:		http://www.unidata.ucar.edu/packages/netcdf/
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
