@@ -8,7 +8,7 @@ Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
 Version:	4.2.1
-Release:	1
+Release:	2
 License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.gz
@@ -85,6 +85,7 @@ Statyczna wersja biblioteki netCDF dla C.
 %configure \
 	%{!?with_tests_net:--disable-dap-remote-tests} \
 	--enable-dap \
+	--enable-doxygen \
 	--enable-netcdf-4 \
 # --enable-cdmremote doesn't build atm. (tested on 4.2)
 # --enable-rpc the same
