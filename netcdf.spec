@@ -7,12 +7,12 @@
 Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	4.3.1.1
+Version:	4.3.2
 Release:	1
 License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.gz
-# Source0-md5:	275c3b839088674c2f00fb3ac264bf11
+# Source0-md5:	2fd2365e1fe9685368cd6ab0ada532a0
 URL:		http://www.unidata.ucar.edu/packages/netcdf/
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
@@ -21,6 +21,7 @@ BuildRequires:	doxygen
 BuildRequires:	hdf5-devel >= 1.8.5
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2.2
+BuildRequires:	sed >= 4.0
 BuildRequires:	szip-devel >= 2.1-2
 BuildRequires:	texinfo
 Requires:	hdf5 >= 1.8.5
@@ -91,6 +92,11 @@ Statyczna wersja biblioteki netCDF dla C.
 # --enable-rpc the same
 # --enable-hdf4 would cause dependency loop (hdf4 requires netcdf)
 
+# some substitutions are missing when using autotools
+%{__sed} -i -e 's,@SHOW_DOXYGEN_TAG_LIST@,NO,' \
+	-e 's,@CMAKE_CURRENT_BINARY_DIR@,.,' \
+	man4/Doxyfile
+
 %{__make}
 
 %if %{with tests}
@@ -111,7 +117,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc COPYRIGHT README RELEASE_NOTES.md
+%doc COPYRIGHT README.md RELEASE_NOTES.md
 %attr(755,root,root) %{_bindir}/nccopy
 %attr(755,root,root) %{_bindir}/ncdump
 %attr(755,root,root) %{_bindir}/ncgen
