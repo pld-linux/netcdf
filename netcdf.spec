@@ -1,3 +1,4 @@
+# TODO: parallel (BR: pnetcdf-devel)?
 #
 # Conditional build:
 %bcond_without	tests		# don't perform "make check"
@@ -7,12 +8,12 @@
 Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	4.3.2
-Release:	5
+Version:	4.3.3.1
+Release:	1
 License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.gz
-# Source0-md5:	2fd2365e1fe9685368cd6ab0ada532a0
+# Source0-md5:	5c9dad3705a3408d27f696e5b31fb88c
 URL:		http://www.unidata.ucar.edu/packages/netcdf/
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
@@ -95,7 +96,9 @@ Statyczna wersja biblioteki netCDF dla C.
 # some substitutions are missing when using autotools
 %{__sed} -i -e 's,@SHOW_DOXYGEN_TAG_LIST@,NO,' \
 	-e 's,@CMAKE_CURRENT_BINARY_DIR@,.,' \
-	man4/Doxyfile
+	-e 's,@SERVER_SIDE_SEARCH@,NO,' \
+	-e 's,@NC_ENABLE_DOXYGEN_PDF_OUTPUT@,NO,' \
+	docs/Doxyfile
 
 %{__make}
 
@@ -124,6 +127,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/ncgen3
 %attr(755,root,root) %{_libdir}/libnetcdf.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.7
+%{_libdir}/libnetcdf.settings
 %{_mandir}/man1/nccopy.1*
 %{_mandir}/man1/ncdump.1*
 %{_mandir}/man1/ncgen.1*
@@ -131,11 +135,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%doc man4/html/*
+%doc docs/html/*
 %attr(755,root,root) %{_bindir}/nc-config
 %attr(755,root,root) %{_libdir}/libnetcdf.so
 %{_libdir}/libnetcdf.la
 %{_includedir}/netcdf.h
+%{_includedir}/netcdf_meta.h
 %{_pkgconfigdir}/netcdf.pc
 %{_mandir}/man3/netcdf.3*
 
