@@ -8,12 +8,12 @@
 Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	4.3.3.1
-Release:	4
+Version:	4.4.0
+Release:	1
 License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.gz
-# Source0-md5:	5c9dad3705a3408d27f696e5b31fb88c
+# Source0-md5:	cffda0cbd97fdb3a06e9274f7aef438e
 URL:		http://www.unidata.ucar.edu/packages/netcdf/
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
@@ -126,7 +126,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/ncgen
 %attr(755,root,root) %{_bindir}/ncgen3
 %attr(755,root,root) %{_libdir}/libnetcdf.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.7
+%attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.11
 %{_libdir}/libnetcdf.settings
 %{_mandir}/man1/nccopy.1*
 %{_mandir}/man1/ncdump.1*
@@ -140,6 +140,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libnetcdf.so
 %{_libdir}/libnetcdf.la
 %{_includedir}/netcdf.h
+%{_includedir}/netcdf_mem.h
 %{_includedir}/netcdf_meta.h
 %{_pkgconfigdir}/netcdf.pc
 %{_mandir}/man3/netcdf.3*
