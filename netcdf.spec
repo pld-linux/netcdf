@@ -8,12 +8,12 @@
 Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	4.4.0
+Version:	4.4.1
 Release:	1
 License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.gz
-# Source0-md5:	cffda0cbd97fdb3a06e9274f7aef438e
+# Source0-md5:	7843e35b661c99e1d49e60791d5072d8
 URL:		http://www.unidata.ucar.edu/packages/netcdf/
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
@@ -89,8 +89,6 @@ Statyczna wersja biblioteki netCDF dla C.
 	--enable-dap \
 	--enable-doxygen \
 	--enable-netcdf-4 \
-# --enable-cdmremote doesn't build atm. (tested on 4.2)
-# --enable-rpc the same
 # --enable-hdf4 would cause dependency loop (hdf4 requires netcdf)
 
 # some substitutions are missing when using autotools
