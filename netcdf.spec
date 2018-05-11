@@ -1,6 +1,7 @@
-# TODO: parallel (BR: pnetcdf-devel)?
 #
 # Conditional build:
+%bcond_with	hdf4		# HDF4 support [causes dependency loop, hdf4 requires netcdf; tests fail]
+%bcond_with	pnetcdf		# parallel I/O for classic CDF files using PnetCDF
 %bcond_without	tests		# don't perform "make check"
 				# (note: tests need endoder-enabled szip)
 %bcond_with	tests_net	# remote tests (Internet access required)
@@ -8,24 +9,28 @@
 Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	4.4.1
-Release:	2
+Version:	4.6.1
+Release:	1
 License:	BSD-like
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.gz
-# Source0-md5:	7843e35b661c99e1d49e60791d5072d8
+# Source0-md5:	ee81c593efc8a6229d9bcb350b6d7849
 URL:		http://www.unidata.ucar.edu/packages/netcdf/
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
 BuildRequires:	curl-devel
 BuildRequires:	doxygen
+%{?with_hdf4:BuildRequires:	hdf-devel >= 4}
 BuildRequires:	hdf5-devel >= 1.8.5
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2.2
+%{?with_pnetcdf:BuildRequires:	parallel-netcdf-devel >= 1.6.0}
 BuildRequires:	sed >= 4.0
 BuildRequires:	szip-devel >= 2.1-2
 BuildRequires:	texinfo
+%{?with_hdf4:Requires:	hdf >= 4}
 Requires:	hdf5 >= 1.8.5
+%{?with_pnetcdf:Requires:	parallel-netcdf >= 1.6.0}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -54,7 +59,9 @@ Summary(pl.UTF-8):	Pliki nagłówkowe netCDF
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	curl-devel
+%{?with_hdf4:Requires:	hdf-devel >= 4}
 Requires:	hdf5-devel >= 1.8.5
+%{?with_pnetcdf:Requires:	parallel-netcdf-devel >= 1.6.0}
 Requires:	szip-devel
 
 %description devel
@@ -78,18 +85,25 @@ Statyczna wersja biblioteki netCDF dla C.
 %prep
 %setup -q
 
+%if %{without tests_net}
+# assumes at least 2 processors are available via MPI
+%{__sed} -i '/TESTS += run_pnetcdf_test.sh/d' nc_test/Makefile.am
+%endif
+
 %build
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
 %{__autoheader}
 %{__automake}
+%{?with_hdf4:CPPFLAGS="%{rpmcppflags} -I/usr/include/hdf"}
 %configure \
 	%{!?with_tests_net:--disable-dap-remote-tests} \
 	--enable-dap \
 	--enable-doxygen \
+	%{?with_hdf4:--enable-hdf4} \
 	--enable-netcdf-4 \
-# --enable-hdf4 would cause dependency loop (hdf4 requires netcdf)
+	%{?with_pnetcdf:--enable-pnetcdf}
 
 # some substitutions are missing when using autotools
 %{__sed} -i -e 's,@SHOW_DOXYGEN_TAG_LIST@,NO,' \
@@ -110,6 +124,9 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+# hdf5plugins used for filter testing
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/lib{bzip2,misc}.*
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -123,8 +140,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/ncdump
 %attr(755,root,root) %{_bindir}/ncgen
 %attr(755,root,root) %{_bindir}/ncgen3
+%attr(755,root,root) %{_bindir}/ocprint
 %attr(755,root,root) %{_libdir}/libnetcdf.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.11
+%attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.13
 %{_libdir}/libnetcdf.settings
 %{_mandir}/man1/nccopy.1*
 %{_mandir}/man1/ncdump.1*
@@ -140,6 +158,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/netcdf.h
 %{_includedir}/netcdf_mem.h
 %{_includedir}/netcdf_meta.h
+%{?with_pnetcdf:%{_includedir}/netcdf_par.h}
 %{_pkgconfigdir}/netcdf.pc
 %{_mandir}/man3/netcdf.3*
 
