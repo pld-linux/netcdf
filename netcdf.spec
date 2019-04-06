@@ -9,12 +9,12 @@
 Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	4.6.1
+Version:	4.6.3
 Release:	1
 License:	BSD-like
 Group:		Libraries
-Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-%{version}.tar.gz
-# Source0-md5:	ee81c593efc8a6229d9bcb350b6d7849
+Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-c-%{version}.tar.gz
+# Source0-md5:	ef0b4d24f2c5a2a424c769cbb91fa45f
 URL:		http://www.unidata.ucar.edu/packages/netcdf/
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
@@ -83,7 +83,7 @@ Static version of netCDF C library.
 Statyczna wersja biblioteki netCDF dla C.
 
 %prep
-%setup -q
+%setup -q -n %{name}-c-%{version}
 
 %if %{without tests_net}
 # assumes at least 2 processors are available via MPI
@@ -140,9 +140,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/ncdump
 %attr(755,root,root) %{_bindir}/ncgen
 %attr(755,root,root) %{_bindir}/ncgen3
-%attr(755,root,root) %{_bindir}/ocprint
 %attr(755,root,root) %{_libdir}/libnetcdf.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.13
+%attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.15
 %{_libdir}/libnetcdf.settings
 %{_mandir}/man1/nccopy.1*
 %{_mandir}/man1/ncdump.1*
@@ -156,6 +155,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libnetcdf.so
 %{_libdir}/libnetcdf.la
 %{_includedir}/netcdf.h
+%{_includedir}/netcdf_aux.h
+%{_includedir}/netcdf_filter.h
 %{_includedir}/netcdf_mem.h
 %{_includedir}/netcdf_meta.h
 %{?with_pnetcdf:%{_includedir}/netcdf_par.h}
