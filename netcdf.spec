@@ -9,12 +9,12 @@
 Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	4.6.3
-Release:	2
-License:	BSD-like
+Version:	4.7.3
+Release:	1
+License:	BSD
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-c-%{version}.tar.gz
-# Source0-md5:	ef0b4d24f2c5a2a424c769cbb91fa45f
+# Source0-md5:	9e1d7f13c2aef921c854d87037bcbd96
 URL:		http://www.unidata.ucar.edu/packages/netcdf/
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
@@ -124,8 +124,10 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-# hdf5plugins used for filter testing
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/lib{bzip2,misc}.*
+# dlopened (by libhdf5)
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libh5bzip2.la
+# obsoleted by pkg-config
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libnetcdf.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -142,6 +144,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/ncgen3
 %attr(755,root,root) %{_libdir}/libnetcdf.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.15
+%attr(755,root,root) %{_libdir}/libh5bzip2.so
 %{_libdir}/libnetcdf.settings
 %{_mandir}/man1/nccopy.1*
 %{_mandir}/man1/ncdump.1*
@@ -153,9 +156,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc docs/html/*
 %attr(755,root,root) %{_bindir}/nc-config
 %attr(755,root,root) %{_libdir}/libnetcdf.so
-%{_libdir}/libnetcdf.la
 %{_includedir}/netcdf.h
 %{_includedir}/netcdf_aux.h
+%{_includedir}/netcdf_dispatch.h
 %{_includedir}/netcdf_filter.h
 %{_includedir}/netcdf_mem.h
 %{_includedir}/netcdf_meta.h
