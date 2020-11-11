@@ -9,19 +9,19 @@
 Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	4.7.3
+Version:	4.7.4
 Release:	1
 License:	BSD
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-c-%{version}.tar.gz
-# Source0-md5:	9e1d7f13c2aef921c854d87037bcbd96
-URL:		http://www.unidata.ucar.edu/packages/netcdf/
+# Source0-md5:	3e0a97e6abb9a989f8a8a2e395473597
+URL:		https://www.unidata.ucar.edu/software/netcdf/
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
 BuildRequires:	curl-devel
 BuildRequires:	doxygen
 %{?with_hdf4:BuildRequires:	hdf-devel >= 4}
-BuildRequires:	hdf5-devel >= 1.8.5
+BuildRequires:	hdf5-devel >= 1.10.3
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2.2
 %{?with_pnetcdf:BuildRequires:	parallel-netcdf-devel >= 1.6.0}
@@ -29,7 +29,7 @@ BuildRequires:	sed >= 4.0
 BuildRequires:	szip-devel >= 2.1-2
 BuildRequires:	texinfo
 %{?with_hdf4:Requires:	hdf >= 4}
-Requires:	hdf5 >= 1.8.5
+Requires:	hdf5 >= 1.10.3
 %{?with_pnetcdf:Requires:	parallel-netcdf >= 1.6.0}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -60,7 +60,7 @@ Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	curl-devel
 %{?with_hdf4:Requires:	hdf-devel >= 4}
-Requires:	hdf5-devel >= 1.8.5
+Requires:	hdf5-devel >= 1.10.3
 %{?with_pnetcdf:Requires:	parallel-netcdf-devel >= 1.6.0}
 Requires:	szip-devel
 
@@ -143,7 +143,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/ncgen
 %attr(755,root,root) %{_bindir}/ncgen3
 %attr(755,root,root) %{_libdir}/libnetcdf.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.15
+%attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.18
 %attr(755,root,root) %{_libdir}/libh5bzip2.so
 %{_libdir}/libnetcdf.settings
 %{_mandir}/man1/nccopy.1*
