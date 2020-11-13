@@ -1,6 +1,6 @@
 #
 # Conditional build:
-%bcond_with	hdf4		# HDF4 support [causes dependency loop, hdf4 requires netcdf; tests fail]
+%bcond_with	hdf4		# HDF4 read support (needs hdf built with "--disable-netcdf")
 %bcond_with	pnetcdf		# parallel I/O for classic CDF files using PnetCDF
 %bcond_without	tests		# don't perform "make check"
 				# (note: tests need endoder-enabled szip)
@@ -22,6 +22,7 @@ BuildRequires:	curl-devel
 BuildRequires:	doxygen
 %{?with_hdf4:BuildRequires:	hdf-devel >= 4}
 BuildRequires:	hdf5-devel >= 1.10.3
+%{?with_hdf4:BuildRequires:	libjpeg-devel}
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2.2
 %{?with_pnetcdf:BuildRequires:	parallel-netcdf-devel >= 1.6.0}
@@ -115,7 +116,8 @@ Statyczna wersja biblioteki netCDF dla C.
 %{__make}
 
 %if %{with tests}
-%{__make} -j1 check
+%{__make} -j1 check || cat ncdump/test-suite.log
+exit 1
 %endif
 
 %install
