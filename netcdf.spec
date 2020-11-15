@@ -10,11 +10,12 @@ Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
 Version:	4.7.4
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries
 Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-c-%{version}.tar.gz
 # Source0-md5:	3e0a97e6abb9a989f8a8a2e395473597
+Patch0:		%{name}-hdf5-filter-fix.patch
 URL:		https://www.unidata.ucar.edu/software/netcdf/
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
@@ -85,6 +86,7 @@ Statyczna wersja biblioteki netCDF dla C.
 
 %prep
 %setup -q -n %{name}-c-%{version}
+%patch0 -p1
 
 %if %{without tests_net}
 # assumes at least 2 processors are available via MPI
@@ -116,8 +118,7 @@ Statyczna wersja biblioteki netCDF dla C.
 %{__make}
 
 %if %{with tests}
-%{__make} -j1 check || cat ncdump/test-suite.log
-exit 1
+%{__make} -j1 check
 %endif
 
 %install
