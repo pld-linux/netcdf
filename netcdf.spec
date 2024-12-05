@@ -1,4 +1,6 @@
 #
+# TODO: build with system oc?
+#
 # Conditional build:
 %bcond_with	hdf4		# HDF4 read support (needs hdf built with "--disable-netcdf")
 %bcond_with	pnetcdf		# parallel I/O for classic CDF files using PnetCDF
@@ -9,13 +11,12 @@
 Summary:	NetCDF: Network Common Data Form
 Summary(pl.UTF-8):	NetCDF: obsługa wspólnego sieciowego formatu danych
 Name:		netcdf
-Version:	4.7.4
-Release:	2
+Version:	4.9.2
+Release:	1
 License:	BSD
 Group:		Libraries
-Source0:	ftp://ftp.unidata.ucar.edu/pub/netcdf/%{name}-c-%{version}.tar.gz
-# Source0-md5:	3e0a97e6abb9a989f8a8a2e395473597
-Patch0:		%{name}-hdf5-filter-fix.patch
+Source0:	https://downloads.unidata.ucar.edu/netcdf-c/%{version}/%{name}-c-%{version}.tar.gz
+# Source0-md5:	f48ee01534365006934f0c63d4055ea0
 URL:		https://www.unidata.ucar.edu/software/netcdf/
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
@@ -86,7 +87,6 @@ Statyczna wersja biblioteki netCDF dla C.
 
 %prep
 %setup -q -n %{name}-c-%{version}
-%patch0 -p1
 
 %if %{without tests_net}
 # assumes at least 2 processors are available via MPI
@@ -127,8 +127,6 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-# dlopened (by libhdf5)
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libh5bzip2.la
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libnetcdf.la
 
@@ -141,13 +139,13 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc COPYRIGHT README.md RELEASE_NOTES.md
+%attr(755,root,root) %{_bindir}/nc4print
 %attr(755,root,root) %{_bindir}/nccopy
 %attr(755,root,root) %{_bindir}/ncdump
 %attr(755,root,root) %{_bindir}/ncgen
 %attr(755,root,root) %{_bindir}/ncgen3
 %attr(755,root,root) %{_libdir}/libnetcdf.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.18
-%attr(755,root,root) %{_libdir}/libh5bzip2.so
+%attr(755,root,root) %ghost %{_libdir}/libnetcdf.so.19
 %{_libdir}/libnetcdf.settings
 %{_mandir}/man1/nccopy.1*
 %{_mandir}/man1/ncdump.1*
@@ -162,7 +160,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/netcdf.h
 %{_includedir}/netcdf_aux.h
 %{_includedir}/netcdf_dispatch.h
+%{_includedir}/netcdf_filter_build.h
 %{_includedir}/netcdf_filter.h
+%{_includedir}/netcdf_filter_hdf5_build.h
+%{_includedir}/netcdf_json.h
 %{_includedir}/netcdf_mem.h
 %{_includedir}/netcdf_meta.h
 %{?with_pnetcdf:%{_includedir}/netcdf_par.h}
