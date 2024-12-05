@@ -1,0 +1,11 @@
+--- netcdf-c-4.9.2/ncgen/ncgen.h~	2023-03-13 22:47:11.000000000 +0100
++++ netcdf-c-4.9.2/ncgen/ncgen.h	2024-12-05 23:22:25.591690673 +0100
+@@ -173,7 +173,7 @@
+ 	int             hasvlen;  /* 1 => this type contains a vlen*/
+ 	nc_type         typecode;
+         unsigned long   offset;   /* fields in struct*/
+-        unsigned long   alignment;/* fields in struct*/
++        size_t          alignment;/* fields in struct*/
+         NCConstant*     econst;   /* for enum values*/
+         Dimset          dimset;     /* for NC_VAR/NC_FIELD/NC_ATT*/
+         size_t   size;     /* for opaque, compound, etc.*/

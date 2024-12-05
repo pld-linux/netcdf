@@ -17,6 +17,7 @@ License:	BSD
 Group:		Libraries
 Source0:	https://downloads.unidata.ucar.edu/netcdf-c/%{version}/%{name}-c-%{version}.tar.gz
 # Source0-md5:	f48ee01534365006934f0c63d4055ea0
+Patch0:		size_t.patch
 URL:		https://www.unidata.ucar.edu/software/netcdf/
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
@@ -87,6 +88,7 @@ Statyczna wersja biblioteki netCDF dla C.
 
 %prep
 %setup -q -n %{name}-c-%{version}
+%patch -P 0 -p1
 
 %if %{without tests_net}
 # assumes at least 2 processors are available via MPI
