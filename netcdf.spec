@@ -1,11 +1,10 @@
-#
 # TODO: build with system oc?
+# S3 support: AC_SEARCH_LIBS([aws_allocator_is_valid],[aws-c-common aws-cpp-sdk-s3 aws-cpp-sdk-core], ...)
 #
 # Conditional build:
 %bcond_with	hdf4		# HDF4 read support (needs hdf built with "--disable-netcdf")
 %bcond_with	pnetcdf		# parallel I/O for classic CDF files using PnetCDF
-%bcond_without	tests		# don't perform "make check"
-				# (note: tests need endoder-enabled szip)
+%bcond_without	tests		# unit tests (endoder-enabled szip needed)
 %bcond_with	tests_net	# remote tests (Internet access required)
 #
 Summary:	NetCDF: Network Common Data Form
@@ -22,17 +21,18 @@ Patch1:		disable-bad-test.patch
 URL:		https://www.unidata.ucar.edu/software/netcdf/
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake
-BuildRequires:	curl-devel
+BuildRequires:	curl-devel >= 7.66
 BuildRequires:	doxygen
 %{?with_hdf4:BuildRequires:	hdf-devel >= 4}
 BuildRequires:	hdf5-devel >= 1.10.3
+BuildRequires:	libaec-szip-devel >= 1.0
 %{?with_hdf4:BuildRequires:	libjpeg-devel}
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2.2
 %{?with_pnetcdf:BuildRequires:	parallel-netcdf-devel >= 1.6.0}
 BuildRequires:	sed >= 4.0
-BuildRequires:	szip-devel >= 2.1-2
 BuildRequires:	texinfo
+Requires:	curl-libs >= 7.66
 %{?with_hdf4:Requires:	hdf >= 4}
 Requires:	hdf5 >= 1.10.3
 %{?with_pnetcdf:Requires:	parallel-netcdf >= 1.6.0}
@@ -63,11 +63,11 @@ Summary:	Header files for netCDF
 Summary(pl.UTF-8):	Pliki nagłówkowe netCDF
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	curl-devel
+Requires:	curl-devel >= 7.66
 %{?with_hdf4:Requires:	hdf-devel >= 4}
 Requires:	hdf5-devel >= 1.10.3
+Requires:	libaec-szip-devel >= 1.0
 %{?with_pnetcdf:Requires:	parallel-netcdf-devel >= 1.6.0}
-Requires:	szip-devel
 
 %description devel
 Header files for netCDF - C interface.
@@ -135,6 +135,8 @@ rm -rf $RPM_BUILD_ROOT
 
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libnetcdf.la
+# packaged in oc package
+%{__rm} $RPM_BUILD_ROOT%{_bindir}/ocprint
 
 %clean
 rm -rf $RPM_BUILD_ROOT
